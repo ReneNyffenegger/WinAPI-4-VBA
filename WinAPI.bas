@@ -34,6 +34,13 @@ declare function FindWindow lib "user32" alias "FindWindowA" ( _
      byVal lpWindowName as string) as long
 
 
+#if VBA7 then
+    public declare ptrSafe sub Sleep Lib "kernel32" (ByVal dwMilliseconds As LongPtr) ' 64-Bit versions of Excel
+#else
+    public declare         sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long   ) ' 32-Bit versions of Excel
+#end if
+
+
 public const  WM_CHAR    as long = &H102
 public const  WM_KEYDOWN as long = &H100
 
