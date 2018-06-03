@@ -198,9 +198,16 @@ public const PM_REMOVE  as long = &H1
          byVal lpBuffer     as string, _
                nSize        as long) as long
 
+    declare function GetTempFileName     lib "kernel32"      alias "GetTempFileNameA" ( _
+         byVal lpszPath       as string, _
+         byVal lpPrefixString as string, _ 
+         byVal uUnique        as long,   _
+         byVal lpTempFileName as string) as long
+
     declare function GetTempPath         lib "kernel32" alias "GetTempPathA"         ( _
          byVal nBufferLength as long,  _
          byVal lpBuffer      as String) as long
+
 
     declare function GetUserName         lib "advapi32.dll" alias "GetUserNameA"     ( _
          byVal lpBuffer      as string, _       
