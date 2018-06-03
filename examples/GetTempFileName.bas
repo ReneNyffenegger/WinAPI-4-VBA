@@ -12,6 +12,10 @@ sub main()
 
    msgBox "The temporary file is " & tempFile
 
+ '
+ ' The temporary file is not yet created. Open it and
+ ' write something into it:
+ '
    open tempFile for output as 1
 
    print# 1, "Foo bar baz"
