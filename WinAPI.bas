@@ -171,6 +171,9 @@ public const PM_REMOVE  as long = &H1
 
 #if VBA7 then ' 32-Bit versions of Excel ' {
 
+    declare function BringWindowToTop    lib "user32" ( _ 
+         byVal lngHWnd      as long) as long
+
     declare function CallNextHookEx      lib "user32" ( _
          byVal hHook        as long, _
          byVal nCode        as long, _
@@ -180,17 +183,28 @@ public const PM_REMOVE  as long = &H1
     declare function FindWindow          lib "user32"  alias "FindWindowA" ( _
          byVal lpClassName  as string, _
          byVal lpWindowName as string) as long
+  '
+  ' Some Class Names
+  '   MS Access:           OMain
+  '   MS Excel:            XLMAIN
+  '   MS Outlook:          rctrl_renwnd32
+  '   MS Word:             OpusApp
+  '   Visual Basic Editor: wndclass_desked_gsk
 
 
-    declare function GetActiveWindow     lib "user32"   () As Long
+    declare function GetActiveWindow     lib "user32"   () as long
 
     declare function GetComputerName     lib "kernel32"     alias "GetComputerNameA" ( _
          byVal lpBuffer     as string, _
                nSize        as long) as long
 
+    declare function GetTempPath         lib "kernel32" alias "GetTempPathA"         ( _
+         byVal nBufferLength as long,  _
+         byVal lpBuffer      as String) as long
+
     declare function GetUserName         lib "advapi32.dll" alias "GetUserNameA"     ( _
-         byVal lpBuffer     as string, _       
-               nSize        as long    ) as long
+         byVal lpBuffer      as string, _       
+               nSize         as long    ) as long
 
 
     declare sub      Sleep               lib "kernel32" (byVal dwMilliseconds as long   )
