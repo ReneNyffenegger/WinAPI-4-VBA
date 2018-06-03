@@ -171,6 +171,10 @@ public const PM_REMOVE  as long = &H1
 
 #if VBA7 then ' 32-Bit versions of Excel ' {
 
+    declare function GetUserName Lib "advapi32.dll" alias "GetUserNameA" ( _
+         byVal lpBuffer     as string, _       
+               nSize        as long    ) as long
+
     declare function CallNextHookEx      lib "user32" ( _
          byVal hHook        as long, _
          byVal nCode        as long, _
