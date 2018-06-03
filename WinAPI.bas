@@ -25,6 +25,21 @@ end type
 
 public const HC_ACTION               = 0
 
+' SW_* constants for ShowWindow() {
+public const SW_FORCEMINIMIZE   = 11 ' Minimizes a window.
+public const SW_HIDE            =  0 ' Hides the window and activates another window.
+public const SW_MAXIMIZE        =  3 ' Maximizes a window.
+public const SW_MINIMIZE        =  6 ' Minimizes the specified window and activates the next top-level window.
+public const SW_RESTORE         =  9 ' Activates and displays the window.
+public const SW_SHOW            =  5 ' Activates the window.
+public const SW_SHOWMAXIMIZED   =  3 ' Activates the window and displays it as a maximized window.
+public const SW_SHOWMINIMIZED   =  2 ' Activates the window and displays it as a minimized window.
+public const SW_SHOWMINNOACTIVE =  7 ' Displays the window as a minimized window (without activating the window).
+public const SW_SHOWNA          =  8 ' Displays the window in its current size and position (without activating the window).
+public const SW_SHOWNOACTIVATE  =  4 ' Displays a window in its most recent size and position (without activating the window).
+public const SW_SHOWNORMAL      =  1 ' Activates and displays a window.
+' }
+
 public const VK_LBUTTON              = &h001 ' { Virtual keys
 public const VK_RBUTTON              = &h002
 public const VK_CANCEL               = &h003 ' Implemented as Ctrl-Break on most keyboards
@@ -194,9 +209,11 @@ public const PM_REMOVE  as long = &H1
 
     declare function GetActiveWindow     lib "user32"   () as long
 
-    declare function GetComputerName     lib "kernel32"     alias "GetComputerNameA" ( _
+    declare function GetComputerName     lib "kernel32"     alias "GetComputerNameA"   ( _
          byVal lpBuffer     as string, _
                nSize        as long) as long
+
+    declare function GetDesktopWindow    lib "user32"   () as long
 
     declare function GetTempFileName     lib "kernel32"      alias "GetTempFileNameA" ( _
          byVal lpszPath       as string, _
@@ -233,7 +250,15 @@ public const PM_REMOVE  as long = &H1
          byVal idHook     as long, _
          byVal lpfn       as long, _
          byVal hmod       as long, _
-         byVal dwThreadId as long) As Long
+         byVal dwThreadId as long) as long
+
+    declare function ShowWindow          lib "user32" ( _
+         byVal hwnd       as long, _
+         byVal nCmdSHow   as long) as long
+  '
+  ' Use one of the SW*_ constants for nCmdSHow
+  '
+
 
     declare function TranslateMessage    lib "user32" (byRef lpMsg as MSG) as long
 
