@@ -186,7 +186,7 @@ public const PM_REMOVE  as long = &H1
 
 #if VBA7 then ' 32-Bit versions of Excel ' {
 
-    declare function BringWindowToTop    lib "user32" ( _ 
+    declare function BringWindowToTop    lib "user32" ( _
          byVal lngHWnd      as long) as long
 
     declare function CallNextHookEx      lib "user32" ( _
@@ -194,6 +194,10 @@ public const PM_REMOVE  as long = &H1
          byVal nCode        as long, _
          byVal wParam       as long, _
                lParam       as any ) as long
+
+    declare function EnumWindows         lib "user32" ( _
+         byVal lpEnumFunc   as long, _
+         byVal lParam       as long)   as long
 
     declare function FindWindow          lib "user32"  alias "FindWindowA" ( _
          byVal lpClassName  as string, _
@@ -217,7 +221,7 @@ public const PM_REMOVE  as long = &H1
 
     declare function GetTempFileName     lib "kernel32"      alias "GetTempFileNameA" ( _
          byVal lpszPath       as string, _
-         byVal lpPrefixString as string, _ 
+         byVal lpPrefixString as string, _
          byVal uUnique        as long,   _
          byVal lpTempFileName as string) as long
 
@@ -225,11 +229,17 @@ public const PM_REMOVE  as long = &H1
          byVal nBufferLength as long,  _
          byVal lpBuffer      as String) as long
 
+    declare function GetWindowText       lib "user32"       alias "GetWindowTextA"       ( _
+         byVal hWnd          as long  , _
+         byVal lpString      as string, _
+         byVal nMaxCount     as long ) as long
+
+    declare function GetWindowTextLength lib "user32"       alias "GetWindowTextLengthA" ( _
+         byVal hWnd          as long    ) as long
 
     declare function GetUserName         lib "advapi32.dll" alias "GetUserNameA"     ( _
-         byVal lpBuffer      as string, _       
+         byVal lpBuffer      as string, _
                nSize         as long    ) as long
-
 
     declare sub      Sleep               lib "kernel32" (byVal dwMilliseconds as long   )
 
@@ -258,8 +268,6 @@ public const PM_REMOVE  as long = &H1
   '
   ' Use one of the SW*_ constants for nCmdSHow
   '
-
-
     declare function TranslateMessage    lib "user32" (byRef lpMsg as MSG) as long
 
     declare function UnhookWindowsHookEx lib "user32" (ByVal hHook As Long) As Long
