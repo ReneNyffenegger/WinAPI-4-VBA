@@ -213,42 +213,50 @@ public const PM_REMOVE  as long = &H1
 
     declare function GetActiveWindow     lib "user32"   () as long
 
+    declare function GetClassName        lib "user32.dll"   alias "GetClassNameA" ( _
+         byVal hWnd           as long, _
+         byVal lpClassName    as string, _
+         byVal nMaxCount      as long) as long
+
     declare function GetComputerName     lib "kernel32"     alias "GetComputerNameA"   ( _
-         byVal lpBuffer     as string, _
-               nSize        as long) as long
+         byVal lpBuffer       as string, _
+               nSize          as long) as long
 
     declare function GetDesktopWindow    lib "user32"   () as long
 
-    declare function GetTempFileName     lib "kernel32"      alias "GetTempFileNameA" ( _
+    declare function GetParent           lib "user32"                                ( _
+         byVal hwnd           as long) as long
+
+    declare function GetTempFileName     lib "kernel32"     alias "GetTempFileNameA" ( _
          byVal lpszPath       as string, _
          byVal lpPrefixString as string, _
          byVal uUnique        as long,   _
          byVal lpTempFileName as string) as long
 
     declare function GetTempPath         lib "kernel32" alias "GetTempPathA"         ( _
-         byVal nBufferLength as long,  _
-         byVal lpBuffer      as String) as long
+         byVal nBufferLength  as long,  _
+         byVal lpBuffer       as String) as long
 
     declare function GetWindowText       lib "user32"       alias "GetWindowTextA"       ( _
-         byVal hWnd          as long  , _
-         byVal lpString      as string, _
-         byVal nMaxCount     as long ) as long
+         byVal hWnd           as long  , _
+         byVal lpString       as string, _
+         byVal nMaxCount      as long ) as long
 
     declare function GetWindowTextLength lib "user32"       alias "GetWindowTextLengthA" ( _
-         byVal hWnd          as long    ) as long
+         byVal hWnd           as long    ) as long
 
     declare function GetUserName         lib "advapi32.dll" alias "GetUserNameA"     ( _
-         byVal lpBuffer      as string, _
-               nSize         as long    ) as long
+         byVal lpBuffer       as string, _
+               nSize          as long    ) as long
 
     declare sub      Sleep               lib "kernel32" (byVal dwMilliseconds as long   )
 
-    declare function PeekMessage         lib "user32" alias "PeekMessageA" ( _
-         byRef lpMsg         as MSG , _
-         byVal hwnd          as long, _
-         byVal wMsgFilterMin as long, _
-         byVal wMsgFilterMax as long, _
-         byVal wRemoveMsg    as long) as long
+    declare function PeekMessage         lib "user32"       alias "PeekMessageA" ( _
+         byRef lpMsg          as MSG , _
+         byVal hwnd           as long, _
+         byVal wMsgFilterMin  as long, _
+         byVal wMsgFilterMax  as long, _
+         byVal wRemoveMsg     as long) as long
 
     declare function PostMessage         lib "user32" alias "PostMessageA" ( _
          byVal hwnd   as long, _
