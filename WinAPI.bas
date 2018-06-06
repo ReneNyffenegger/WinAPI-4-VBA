@@ -186,16 +186,21 @@ public const PM_REMOVE  as long = &H1
 
 #if VBA7 then ' 32-Bit versions of Excel ' {
 
-    declare function BringWindowToTop    lib "user32" ( _
+    declare function BringWindowToTop    lib "user32"                      ( _
          byVal lngHWnd      as long) as long
 
-    declare function CallNextHookEx      lib "user32" ( _
+    declare function CallNextHookEx      lib "user32"                      ( _
          byVal hHook        as long, _
          byVal nCode        as long, _
          byVal wParam       as long, _
                lParam       as any ) as long
 
-    declare function EnumWindows         lib "user32" ( _
+    declare function EnumChildWindows     lib "user32"                     ( _
+         byVal hWndParent   as long, _
+         byVal lpEnumFunc   as long, _
+         byVal lParam       as long) as long
+
+    declare function EnumWindows         lib "user32"                      ( _
          byVal lpEnumFunc   as long, _
          byVal lParam       as long)   as long
 
