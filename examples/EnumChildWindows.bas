@@ -27,7 +27,8 @@ end function
 function CallBackFuncTopLevel(byVal hWnd as long, byVal lParam as long) as long
 
      isTopLevel = true
-     call EnumChildWindows(hWnd, cbFunc, hWnd)
+     call nextWindow(hWnd)
+'    call EnumChildWindows(hWnd, cbFunc, hWnd)
 
      CallBackFuncTopLevel = true
 
@@ -35,10 +36,6 @@ end function
 
 function CallBackFunc(byVal hWnd as long, byVal lParam as long) as long
 
-    dim windowText  as string
-    dim windowClass as string * 256
-    dim retVal      as long
-    dim l           as long
 
     dim hWndParent  as long
 
@@ -59,14 +56,33 @@ function CallBackFunc(byVal hWnd as long, byVal lParam as long) as long
     end if
 
     cntIter = cntIter + 1
-
   '
   ' We're pretty sure that we're not a top level window:
     isTopLevel = false
 
+    call nextWindow(hWnd)
+
+
+  '
+  ' Return true to indicate that we want to continue
+  ' with the enumeration of the windows:
+  '
+    CallBackFunc = true
+
+end function
+
+sub nextWindow(hWnd as long)
+
+    dim hWndParent  as long
+    dim windowText  as string
+    dim windowClass as string * 256
+    dim retVal      as long
+
+    hWndParent     = GetParent(hWnd)
+
     cells(row_, 1) = hWndParent
     cells(row_, 2) = hWnd
-    cells(row_, 3) = lParam
+'   cells(row_, 3) = lParam
 
     retVal = GetClassName(hWnd, windowClass, 255)
     windowClass = left$(windowClass, retVal)
@@ -82,11 +98,5 @@ function CallBackFunc(byVal hWnd as long, byVal lParam as long) as long
     call EnumChildWindows(hWnd, cbFunc, hWnd)
     indent_ = indent_ - 1
 
-  '
-  ' Return true to indicate that we want to continue
-  ' with the enumeration of the windows:
-  '
-    CallBackFunc = true
-
-end function
+end sub
 
