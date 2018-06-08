@@ -269,7 +269,9 @@ public const PM_REMOVE  as long = &H1
          byVal wParam as long, _
                lParam as any) as long
 
-    declare function SetWindowsHookEx    lib  "user32" Alias "SetWindowsHookExA" ( _
+    declare function SetForegroundWindow lib "user32" (byVal hWnd as long) as long
+
+    declare function SetWindowsHookEx    lib "user32" Alias "SetWindowsHookExA" ( _
          byVal idHook     as long, _
          byVal lpfn       as long, _
          byVal hmod       as long, _

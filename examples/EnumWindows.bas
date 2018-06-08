@@ -7,7 +7,7 @@ sub main()
     call EnumWindows(addressOf EnumWindowsProc, byVal 0&) 
 end sub
 
-function EnumWindowsProc(byVal hWnd as long, byVal lParam as long) as long
+function EnumWindowsProc(byVal hWnd as long, byVal lParam as long) as long ' {
 
     dim windowText  as string
     dim windowClass as string * 256
@@ -36,4 +36,4 @@ function EnumWindowsProc(byVal hWnd as long, byVal lParam as long) as long
   '
     EnumWindowsProc = true
 
-end function
+end function ' }
