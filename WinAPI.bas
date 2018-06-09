@@ -1,27 +1,26 @@
 option explicit
 
-type KBDLLHOOKSTRUCT
+type KBDLLHOOKSTRUCT ' {
      vkCode      as long ' virtual key code in range 1 .. 254
      scanCode    as long ' hardware code
      flags       as long ' bit 4: alt key was pressed
      time        as long
      dwExtraInfo as long
-end  type
+end  type ' }
 
-type POINTAPI
+type POINTAPI ' {
     x as long
     y as long
-end type
+end type ' }
 
-type MSG
+type MSG ' {
     hWnd    as long
     message as long
     wParam  as long
     lParam  as long
     time    as long
     pt      as POINTAPI
-end type
-
+end type ' }
 
 public const HC_ACTION               = 0
 
@@ -185,6 +184,10 @@ public const PM_REMOVE  as long = &H1
 
 
 #if VBA7 then ' 32-Bit versions of Excel ' {
+
+    declare function Beep                lib "kernel32"                    ( _
+         byVal dwFreq       as long, _
+         byVal dwDuration   as long) as long
 
     declare function BringWindowToTop    lib "user32"                      ( _
          byVal lngHWnd      as long) as long
