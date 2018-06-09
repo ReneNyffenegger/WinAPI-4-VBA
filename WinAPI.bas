@@ -1,5 +1,19 @@
 option explicit
 
+type INPUT_     '   typedef struct tagINPUT {
+  dwType      as long
+  wVK         as integer
+  wScan       as integer         '               KEYBDINPUT ki;
+  dwFlags     as long            '               HARDWAREINPUT hi;
+  dwTime      as long            '           };
+  dwExtraInfo as long            '   } INPUT, *PINPUT;
+  dwPadding   as currency        '   8 extra bytes, because mouses take more.
+end type ' }
+
+public const INPUT_KEYBOARD  as long = 1
+public const KEYEVENTF_KEYUP as long = 2 ' Used for dwFlags in INPUT_
+
+
 type KBDLLHOOKSTRUCT ' {
      vkCode      as long ' virtual key code in range 1 .. 254
      scanCode    as long ' hardware code
@@ -278,15 +292,21 @@ public const PM_REMOVE  as long = &H1
          byVal wMsgFilterMax  as long, _
          byVal wRemoveMsg     as long) as long
 
-    declare function PostMessage         lib "user32" alias "PostMessageA" ( _
+    declare function PostMessage         lib "user32"       alias "PostMessageA" ( _
          byVal hwnd   as long, _
          byVal wMsg   as long, _
          byVal wParam as long, _
                lParam as any) as long
 
+
+    declare function SendInput           lib "user32"                                 ( _
+         byVal nInputs as long, _
+         byRef pInputs as any , _
+         byVal cbSize  as long) as long
+
     declare function SetForegroundWindow lib "user32" (byVal hWnd as long) as long
 
-    declare function SetWindowsHookEx    lib "user32" Alias "SetWindowsHookExA" ( _
+    declare function SetWindowsHookEx    lib "user32"       alias "SetWindowsHookExA" ( _
          byVal idHook     as long, _
          byVal lpfn       as long, _
          byVal hmod       as long, _
@@ -303,6 +323,9 @@ public const PM_REMOVE  as long = &H1
     declare function TranslateMessage    lib "user32" (byRef lpMsg as MSG) as long
 
     declare function UnhookWindowsHookEx lib "user32" (ByVal hHook As Long) As Long
+
+    declare function VkKeyScan           lib "user32"       alias "VkKeyScanA"        ( _
+         byVal cChar      as byte) as integer
 
     declare function WaitMessage         lib "user32" () as long
 ' }
