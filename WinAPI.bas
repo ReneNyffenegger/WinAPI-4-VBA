@@ -184,6 +184,10 @@ public const PM_REMOVE  as long = &H1
 
 
 #if VBA7 then ' 32-Bit versions of Excel ' {
+    declare function AttachThreadInput Lib "user32"                        ( _
+    	 byVal idAttach       as long, _
+    	 byVal idAttachTo     as long, _
+    	 byVal fAttach        as long) as long
 
     declare function Beep                lib "kernel32"                    ( _
          byVal dwFreq       as long, _
@@ -232,6 +236,8 @@ public const PM_REMOVE  as long = &H1
 
     declare function GetDesktopWindow    lib "user32"   () as long
 
+    declare function GetForegroundWindow Lib "user32"   () as long
+
     declare function GetParent           lib "user32"                                ( _
          byVal hwnd           as long) as long
 
@@ -245,6 +251,10 @@ public const PM_REMOVE  as long = &H1
          byVal nBufferLength  as long,  _
          byVal lpBuffer       as String) as long
 
+    declare function GetWindowThreadProcessId lib "user32"                               ( _
+         byVal hwnd           as Long, _
+    	         lpdwProcessId  As long) as long
+
     declare function GetWindowText       lib "user32"       alias "GetWindowTextA"       ( _
          byVal hWnd           as long  , _
          byVal lpString       as string, _
@@ -257,7 +267,9 @@ public const PM_REMOVE  as long = &H1
          byVal lpBuffer       as string, _
                nSize          as long    ) as long
 
-    declare sub      Sleep               lib "kernel32" (byVal dwMilliseconds as long   )
+    declare function IsIconic            lib "user32"                                     ( _
+         byVal hwnd           as long) as long
+
 
     declare function PeekMessage         lib "user32"       alias "PeekMessageA" ( _
          byRef lpMsg          as MSG , _
@@ -286,6 +298,8 @@ public const PM_REMOVE  as long = &H1
   '
   ' Use one of the SW*_ constants for nCmdSHow
   '
+
+    declare sub      Sleep               lib "kernel32" (byVal dwMilliseconds as long   )
     declare function TranslateMessage    lib "user32" (byRef lpMsg as MSG) as long
 
     declare function UnhookWindowsHookEx lib "user32" (ByVal hHook As Long) As Long
