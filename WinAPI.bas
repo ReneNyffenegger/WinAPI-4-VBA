@@ -38,6 +38,18 @@ end type ' }
 
 public const HC_ACTION               = 0
 
+' { HWND_* contstans
+'   These can be used for the parameter hWndInsertAfter in SetWindowPos()
+'
+public const HWND_BOTTOM    =  1
+public const HWND_NOTOPMOST = -2
+public const HWND_TOP       =  0
+public const HWND_TOPMOST   = -1
+
+' }
+
+public const PM_REMOVE  as long = &H1
+
 ' SW_* constants for ShowWindow() {
 public const SW_FORCEMINIMIZE   = 11 ' Minimizes a window.
 public const SW_HIDE            =  0 ' Hides the window and activates another window.
@@ -51,6 +63,22 @@ public const SW_SHOWMINNOACTIVE =  7 ' Displays the window as a minimized window
 public const SW_SHOWNA          =  8 ' Displays the window in its current size and position (without activating the window).
 public const SW_SHOWNOACTIVATE  =  4 ' Displays a window in its most recent size and position (without activating the window).
 public const SW_SHOWNORMAL      =  1 ' Activates and displays a window.
+' }
+
+' { SWP_* constants for SetWindowPos
+public const SWP_NOSIZE         as long = &h1
+public const SWP_NOMOVE         as long = &h2
+public const SWP_NOZORDER       as long = &h4
+public const SWP_NOREDRAW       as long = &h8
+public const SWP_NOACTIVATE     as long = &h10
+public const SWP_FRAMECHANGED   as long = &h20
+public const SWP_SHOWWINDOW     as long = &h40
+public const SWP_HIDEWINDOW     as long = &h80
+public const SWP_NOCOPYBITS     as long = &h100
+public const SWP_NOOWNERZORDER  as long = &h200
+public const SWP_NOSENDCHANGING as long = &h400
+public const SWP_DEFERERASE     as long = &h2000
+public const SWP_ASYNCWINDOWPOS as long = &h4000
 ' }
 
 public const VK_LBUTTON              = &h001 ' { Virtual keys
@@ -194,7 +222,6 @@ public const WM_KEYUP       = &h101
 public const WM_SYSKEYDOWN  = &h104
 public const WM_SYSKEYUP    = &h105
 
-public const PM_REMOVE  as long = &H1
 
 
 #if VBA7 then ' 32-Bit versions of Excel ' {
@@ -313,13 +340,26 @@ public const PM_REMOVE  as long = &H1
          byVal hmod       as long, _
          byVal dwThreadId as long) as long
 
+    declare function SetWindowPos        lib "user32"                                 ( _
+         byVal hWnd            as long, _
+         byVal hWndInsertAfter as long, _
+         byVal x               as long, _
+         byVal y               as long, _
+         byVal cx              as long, _
+         byVal cy              as long, _
+         byVal uFlags          as long)   as Long
+    '
+    ' Use one of the SWP_* constants for wFlags
+    '
+
+
     declare function ShellExecute Lib "shell32.dll"         alias "ShellExecuteA"     ( _
          byVal hwnd         as long  , _
          byVal lpOperation  as string, _
          byVal lpFile       as string, _
-         byVal lpparameters as string, _
-         byVal lpdirectory  as string, _
-         byval lpnshowcmd   as long)      as long
+         byVal lpParameters as string, _
+         byVal lpDirectory  as string, _
+         byval lpShowCmd    as long)      as long
 
     declare function ShowWindow          lib "user32" ( _
          byVal hwnd       as long, _
