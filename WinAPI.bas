@@ -198,6 +198,7 @@ public const PM_REMOVE  as long = &H1
 
 
 #if VBA7 then ' 32-Bit versions of Excel ' {
+
     declare function AttachThreadInput Lib "user32"                        ( _
     	 byVal idAttach       as long, _
     	 byVal idAttachTo     as long, _
@@ -311,6 +312,14 @@ public const PM_REMOVE  as long = &H1
          byVal lpfn       as long, _
          byVal hmod       as long, _
          byVal dwThreadId as long) as long
+
+    declare function ShellExecute Lib "shell32.dll"         alias "ShellExecuteA"     ( _
+         byVal hwnd         as long  , _
+         byVal lpOperation  as string, _
+         byVal lpFile       as string, _
+         byVal lpparameters as string, _
+         byVal lpdirectory  as string, _
+         byval lpnshowcmd   as long)      as long
 
     declare function ShowWindow          lib "user32" ( _
          byVal hwnd       as long, _
