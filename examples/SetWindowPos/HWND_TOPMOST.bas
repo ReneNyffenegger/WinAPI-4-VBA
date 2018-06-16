@@ -25,7 +25,8 @@ sub main()
     end if
 
   '
-  ' Put the 
+  ' Put the window to the topmost position:
+  '
     call SetWindowPos(hWndNotepad, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE or SWP_NOSIZE)
 
 end sub
