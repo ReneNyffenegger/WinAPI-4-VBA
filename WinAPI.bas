@@ -216,11 +216,12 @@ public const VK_NONAME               = &h0fc ' }
 
 public const WH_KEYBOARD_LL = 13
 
-public const WM_CHAR        = &h102
-public const WM_KEYDOWN     = &h100
-public const WM_KEYUP       = &h101
-public const WM_SYSKEYDOWN  = &h104
-public const WM_SYSKEYUP    = &h105
+public const WM_CHAR        = &h0102
+public const WM_KEYDOWN     = &h0100
+public const WM_KEYUP       = &h0101
+public const WM_SETTEXT     = &h000C
+public const WM_SYSKEYDOWN  = &h0104
+public const WM_SYSKEYUP    = &h0105
 
 
 
