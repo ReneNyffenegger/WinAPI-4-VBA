@@ -216,8 +216,8 @@ public const VK_NONAME               = &h0fc ' }
 
 public const WH_KEYBOARD_LL = 13
 
-public const WM_CHAR        = &H102
-public const WM_KEYDOWN     = &H100
+public const WM_CHAR        = &h102
+public const WM_KEYDOWN     = &h100
 public const WM_KEYUP       = &h101
 public const WM_SYSKEYDOWN  = &h104
 public const WM_SYSKEYUP    = &h105
@@ -264,6 +264,11 @@ public const WM_SYSKEYUP    = &h105
   '   MS Word:             OpusApp
   '   Visual Basic Editor: wndclass_desked_gsk
 
+    declare function FindWindowEx        lib "user32"  alias "FindWindowExA"      ( _
+         byVal hWnd           as long  , _
+         byVal hWndChildAfter as long  , _
+         byVal lpClassName    as string, _
+         byVal lpWindowName   as string) as long
 
     declare function GetActiveWindow     lib "user32"   () as long
 
@@ -294,8 +299,8 @@ public const WM_SYSKEYUP    = &h105
          byVal lpBuffer       as String) as long
 
     declare function GetWindowThreadProcessId lib "user32"                               ( _
-         byVal hwnd           as Long, _
-    	         lpdwProcessId  As long) as long
+         byVal hwnd           as long, _
+    	         lpdwProcessId  as long) as long
 
     declare function GetWindowText       lib "user32"       alias "GetWindowTextA"       ( _
          byVal hWnd           as long  , _
@@ -311,6 +316,10 @@ public const WM_SYSKEYUP    = &h105
 
     declare function IsIconic            lib "user32"                                     ( _
          byVal hwnd           as long) as long
+
+    declare function MapVirtualKey       lib "user32"       alias "MapVirtualKeyA"        ( _
+         byVal wCode          as long,   _
+         byVal wMapType       as long) as long
 
 
     declare function PeekMessage         lib "user32"       alias "PeekMessageA" ( _
@@ -332,6 +341,12 @@ public const WM_SYSKEYUP    = &h105
          byRef pInputs as any , _
          byVal cbSize  as long) as long
 
+    declare function SendMessage         lib "user32"       alias "SendMessageA" ( _
+         byVal hwnd   as long, _
+         byVal wMsg   as long, _
+         byVal wParam as long, _
+               lParam as any) as long
+
     declare function SetForegroundWindow lib "user32" (byVal hWnd as long) as long
 
     declare function SetWindowsHookEx    lib "user32"       alias "SetWindowsHookExA" ( _
@@ -347,11 +362,14 @@ public const WM_SYSKEYUP    = &h105
          byVal y               as long, _
          byVal cx              as long, _
          byVal cy              as long, _
-         byVal uFlags          as long)   as Long
+         byVal uFlags          as long)   as long
     '
     ' Use one of the SWP_* constants for wFlags
     '
 
+    declare function SetWindowText       lib "user32"       alias "SetWindowTextA"    ( _
+         byVal hWnd            as long  , _
+         byVal lpString        as string) as long
 
     declare function ShellExecute Lib "shell32.dll"         alias "ShellExecuteA"     ( _
          byVal hwnd         as long  , _
@@ -371,7 +389,7 @@ public const WM_SYSKEYUP    = &h105
     declare sub      Sleep               lib "kernel32" (byVal dwMilliseconds as long   )
     declare function TranslateMessage    lib "user32" (byRef lpMsg as MSG) as long
 
-    declare function UnhookWindowsHookEx lib "user32" (ByVal hHook As Long) As Long
+    declare function UnhookWindowsHookEx lib "user32" (ByVal hHook as long) as long
 
     declare function VkKeyScan           lib "user32"       alias "VkKeyScanA"        ( _
          byVal cChar      as byte) as integer
