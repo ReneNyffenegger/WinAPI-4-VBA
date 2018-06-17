@@ -58,7 +58,6 @@ function FindWinow_WindowNameContains_cb(byVal hWnd as long, byVal lParam as lon
 
 end function ' }
 
-
 function FindWinow_ClassName(className as string) as long ' {
     captionPart_ = className
     g_hWnd = 0
