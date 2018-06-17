@@ -1,7 +1,5 @@
 option explicit
 
-dim hWndNotepadEdit as long
-
 sub main()
 
     dim hWndNotepad     as long
