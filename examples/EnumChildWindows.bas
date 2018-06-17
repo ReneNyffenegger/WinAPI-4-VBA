@@ -5,6 +5,17 @@ global indent_ as long
 global cbFunc  as long
 const  maxIter = 3333
 global cntIter as long
+
+'
+'      The variable isTopLevel is set to true in the
+'      call back that iterates over the top level
+'      windows (CallBackFuncTopLevel).
+'      In the function that iterates over a top
+'      level's descendants, it is set to false.
+'      Thus, it was needed to determine if in a recursive
+'      strategy, I have to descend into the windows.
+'      I am not sure, if the variable is still needed...
+' 
 global isTopLevel as boolean
 
 sub main()
@@ -28,7 +39,6 @@ function CallBackFuncTopLevel(byVal hWnd as long, byVal lParam as long) as long
 
      isTopLevel = true
      call nextWindow(hWnd)
-'    call EnumChildWindows(hWnd, cbFunc, hWnd)
 
      CallBackFuncTopLevel = true
 
@@ -99,4 +109,3 @@ sub nextWindow(hWnd as long)
     indent_ = indent_ - 1
 
 end sub
-
