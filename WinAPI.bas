@@ -284,34 +284,37 @@ public const WM_SYSKEYUP    = &h0105
 
     declare function GetDesktopWindow    lib "user32"   () as long
 
-    declare function GetForegroundWindow Lib "user32"   () as long
+    declare function GetForegroundWindow lib "user32"   () as long
 
-    declare function GetParent           lib "user32"                                ( _
-         byVal hwnd           as long) as long
+    declare function GetKeyboardLayout   lib "user32"       alias "GetKeyboardLayout"     ( _
+         byVal pwszKLID       as string) as long
 
-    declare function GetTempFileName     lib "kernel32"     alias "GetTempFileNameA" ( _
+    declare function GetParent           lib "user32"                                     ( _
+         byVal hwnd           as long  ) as long
+
+    declare function GetTempFileName     lib "kernel32"     alias "GetTempFileNameA"      ( _
          byVal lpszPath       as string, _
          byVal lpPrefixString as string, _
          byVal uUnique        as long,   _
          byVal lpTempFileName as string) as long
 
-    declare function GetTempPath         lib "kernel32" alias "GetTempPathA"         ( _
+    declare function GetTempPath         lib "kernel32" alias "GetTempPathA"              ( _
          byVal nBufferLength  as long,  _
          byVal lpBuffer       as String) as long
 
-    declare function GetWindowThreadProcessId lib "user32"                               ( _
+    declare function GetWindowThreadProcessId lib "user32"                                ( _
          byVal hwnd           as long, _
     	         lpdwProcessId  as long) as long
 
-    declare function GetWindowText       lib "user32"       alias "GetWindowTextA"       ( _
+    declare function GetWindowText       lib "user32"       alias "GetWindowTextA"        ( _
          byVal hWnd           as long  , _
          byVal lpString       as string, _
          byVal nMaxCount      as long ) as long
 
-    declare function GetWindowTextLength lib "user32"       alias "GetWindowTextLengthA" ( _
+    declare function GetWindowTextLength lib "user32"       alias "GetWindowTextLengthA"  ( _
          byVal hWnd           as long    ) as long
 
-    declare function GetUserName         lib "advapi32.dll" alias "GetUserNameA"     ( _
+    declare function GetUserName         lib "advapi32.dll" alias "GetUserNameA"          ( _
          byVal lpBuffer       as string, _
                nSize          as long    ) as long
 
@@ -322,6 +325,10 @@ public const WM_SYSKEYUP    = &h0105
          byVal wCode          as long,   _
          byVal wMapType       as long) as long
 
+    declare function MapVirtualKeyEx     lib "user32"       alias "MapVirtualKeyExA"      ( _
+         byVal wCode          as long, _
+         byVal wMapType       as long, _
+         byVal dwhkl          as long) as long
 
     declare function PeekMessage         lib "user32"       alias "PeekMessageA" ( _
          byRef lpMsg          as MSG , _
@@ -335,7 +342,6 @@ public const WM_SYSKEYUP    = &h0105
          byVal wMsg   as long, _
          byVal wParam as long, _
                lParam as any) as long
-
 
     declare function SendInput           lib "user32"                                 ( _
          byVal nInputs as long, _
