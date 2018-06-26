@@ -10,8 +10,10 @@ type INPUT_     '   typedef struct tagINPUT {
   dwPadding   as currency        '   8 extra bytes, because mouses take more.
 end type ' }
 
-public const INPUT_KEYBOARD  as long = 1
-public const KEYEVENTF_KEYUP as long = 2 ' Used for dwFlags in INPUT_
+public const INPUT_KEYBOARD   as long = 1
+public const MAPVK_VK_TO_CHAR as long = 2 ' Used in MapVirtualKey
+public const MAPVK_VK_TO_VSC  as long = 0 ' Used in MapVirtualKey
+public const KEYEVENTF_KEYUP  as long = 2 ' Used for dwFlags in INPUT_
 
 
 type KBDLLHOOKSTRUCT ' {
@@ -288,6 +290,8 @@ public const WM_SYSKEYUP    = &h0105
 
     declare function GetKeyboardLayout   lib "user32"       alias "GetKeyboardLayout"     ( _
          byVal pwszKLID       as string) as long
+
+    declare function GetLastError        lib "kernel32" () as long
 
     declare function GetParent           lib "user32"                                     ( _
          byVal hwnd           as long  ) as long
