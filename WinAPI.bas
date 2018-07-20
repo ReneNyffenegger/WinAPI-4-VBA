@@ -290,6 +290,8 @@ public const WM_SYSKEYUP    = &h0105
          byVal lpBuffer       as string, _
                nSize          as long) as long
 
+    declare function GetCurrentThreadId  lib "kernel32" () as long
+
     declare function GetDesktopWindow    lib "user32"   () as long
 
     declare function GetForegroundWindow lib "user32"   () as long
@@ -298,6 +300,9 @@ public const WM_SYSKEYUP    = &h0105
          byVal pwszKLID       as string) as long
 
     declare function GetLastError        lib "kernel32" () as long
+
+    declare function GetModuleHandle     lib "kernel32"     alias "GetModuleHandleA"      ( _
+         byVal lpModuleName as string) as long
 
     declare function GetParent           lib "user32"                                     ( _
          byVal hwnd           as long  ) as long
