@@ -27,6 +27,23 @@ function GetClassName_(hWnd as long) as string ' {
 
 end function ' }
 
+function GetComputerName_() as string ' {
+   dim NetBiosName as string * 32
+   dim rc      as long
+   dim length  as long
+
+   length = 32
+   rc = GetComputerName(NetBiosName, length)
+
+   if rc <> 0 then
+      GetComputerName_ = left$(NetBiosName, length)
+      exit function
+   end if
+
+   GetComputerName_ = "?"
+
+end function ' }
+
 function FindWindow_WindowNameContains(captionPart as string) as long ' {
     captionPart_ = captionPart
     call EnumWindows(addressOf FindWindow_WindowNameContains_cb, byVal 0&)

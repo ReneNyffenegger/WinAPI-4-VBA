@@ -300,7 +300,7 @@ public const WM_SYSKEYUP    = &h0105
 
     declare function GetComputerName     lib "kernel32"     alias "GetComputerNameA"   ( _
          byVal lpBuffer       as string, _
-               nSize          as long) as long
+         byRef nSize          as long) as long
 
     declare function GetCurrentThreadId  lib "kernel32" () as long
 
