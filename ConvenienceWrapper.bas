@@ -2,6 +2,8 @@ option explicit
 
 global g_hWnd       as long
 global captionPart_ as string
+global className__  as string
+global windowText_  as string
 
 function GetwindowText_(hWnd as long) as long ' {
     dim retVal      as long
@@ -84,5 +86,32 @@ function FindWindow_ClassName_cb(byVal hWnd as long, byVal lParam as long) as lo
     end if
 
     FindWindow_ClassName_cb = true
+
+end function ' }
+
+function FindWindow_ClassName_WindowText(className as string, windowText as string) as long ' {
+    className_  = className
+    windowText_ = windowText
+    g_hWnd = 0
+    call EnumWindows(addressOf FindWindow_ClassName_WindowText_cb, byVal 0&)
+    FindWindow_ClassName_WindowText_cb = g_hWnd
+end function ' }
+
+function FindWindow_ClassName_WindowText_cb(byVal hWnd as long, byVal lParam as long) as long ' {
+
+'   dim windowText  as string
+'   dim windowClass as string * 256
+    dim retVal      as long
+
+    if GetClassName_(hWnd) = className_ and GetwindowText_(hWnd) = windowText_  then
+
+'      debug.print "Window with class " & captionPart_ & " found, hWnd = " & hWnd
+       g_hWnd = hWnd
+       FindWindow_ClassName_WindowText_cb = false
+       exit function
+
+    end if
+
+    FindWindow_ClassName_WindowText_cb = true
 
 end function ' }
