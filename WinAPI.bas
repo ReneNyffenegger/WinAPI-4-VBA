@@ -298,6 +298,10 @@ public const WM_SYSKEYUP    = &h0105
          byVal lpClassName    as string, _
          byVal nMaxCount      as long) as long
 
+
+  ' GetComputerName reads the NetBIOS name from the registry when the system is
+  ' started up.
+  '
     declare function GetComputerName     lib "kernel32"     alias "GetComputerNameA"   ( _
          byVal lpBuffer       as string, _
          byRef nSize          as long) as long
