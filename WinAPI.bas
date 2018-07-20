@@ -40,6 +40,8 @@ end type ' }
 
 public const HC_ACTION               = 0
 
+public const HSHELL_WINDOWCREATED    = 1  ' Top-level unowned window has been created. Used in WH_SHELL callback.
+
 ' { HWND_* contstans
 '   These can be used for the parameter hWndInsertAfter in SetWindowPos()
 '
@@ -216,7 +218,11 @@ public const VK_EXSEL                = &h0f8
 public const VK_PLAY                 = &h0fa
 public const VK_NONAME               = &h0fc ' }
 
-public const WH_KEYBOARD_LL = 13
+'
+'      Constants used for SetWindowsHookEx
+'
+public const WH_SHELL       = 10 ' Notification of shell events, such as creation of top level windows.
+public const WH_KEYBOARD_LL = 13 ' Low level keyboard events
 
 public const WM_CHAR        = &h0102
 public const WM_KEYDOWN     = &h0100
