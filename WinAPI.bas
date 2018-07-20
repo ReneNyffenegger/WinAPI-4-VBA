@@ -29,6 +29,14 @@ type POINTAPI ' {
     y as long
 end type ' }
 
+type RECT ' {
+   left     as long
+   top      as long
+   right    as long
+   bottom   as long
+end type ' }
+
+
 type MSG ' {
     hWnd    as long
     message as long
@@ -262,9 +270,9 @@ public const WM_SYSKEYUP    = &h0105
          byVal lpEnumFunc   as long, _
          byVal lParam       as long)   as long
 
-    declare function FindWindow          lib "user32"  alias "FindWindowA" ( _
-         byVal lpClassName  as string, _
-         byVal lpWindowName as string) as long
+  '
+  ' FindWindow: Find the top level window that matches lpClassName (if not null) and
+  ' lpWindowName (if not null).
   '
   ' Some Class Names
   '   MS Access:           OMain
@@ -272,6 +280,10 @@ public const WM_SYSKEYUP    = &h0105
   '   MS Outlook:          rctrl_renwnd32
   '   MS Word:             OpusApp
   '   Visual Basic Editor: wndclass_desked_gsk
+  '
+    declare function FindWindow          lib "user32"  alias "FindWindowA" ( _
+         byVal lpClassName  as string, _
+         byVal lpWindowName as string) as long
 
     declare function FindWindowEx        lib "user32"  alias "FindWindowExA"      ( _
          byVal hWnd           as long  , _
@@ -316,6 +328,10 @@ public const WM_SYSKEYUP    = &h0105
     declare function GetTempPath         lib "kernel32" alias "GetTempPathA"              ( _
          byVal nBufferLength  as long,  _
          byVal lpBuffer       as String) as long
+
+    declare function GetWindowRect       lib "user32.dll"                                 ( _
+         byVal hwnd           as long, _
+         byRef lpRect as RECT        )   as long
 
     declare function GetWindowThreadProcessId lib "user32"                                ( _
          byVal hwnd           as long, _

@@ -2,7 +2,7 @@ option explicit
 
 global g_hWnd       as long
 global captionPart_ as string
-global className__  as string
+global className_   as string
 global windowText_  as string
 
 function GetwindowText_(hWnd as long) as long ' {
@@ -29,7 +29,7 @@ end function ' }
 
 function FindWindow_WindowNameContains(captionPart as string) as long ' {
     captionPart_ = captionPart
-    call EnumWindows(addressOf FindWindow_WindowNameContains_cb, byVal 0&) 
+    call EnumWindows(addressOf FindWindow_WindowNameContains_cb, byVal 0&)
     FindWindow_WindowNameContains = g_hWnd
 end function ' }
 
@@ -38,7 +38,7 @@ function FindWindow_WindowNameContains_cb(byVal hWnd as long, byVal lParam as lo
     dim windowText  as string
     dim windowClass as string * 256
     dim retVal      as long
-    
+
     windowText = space(GetWindowTextLength(hWnd) + 1)
     retVal     =       GetWindowText(hWnd, windowText, len(windowText))
     windowText = left$(windowText, retVal)
@@ -73,12 +73,8 @@ function FindWindow_ClassName_cb(byVal hWnd as long, byVal lParam as long) as lo
     dim windowClass as string * 256
     dim retVal      as long
 
-'   debug.print GetClassName_(hWnd) & ", captionPart_ = " & captionPart_
-    
-
     if GetClassName_(hWnd) = captionPart_ then
 
-       debug.print "Window with class " & captionPart_ & " found, hWnd = " & hWnd
        g_hWnd = hWnd
        FindWindow_ClassName_cb = false
        exit function
@@ -94,18 +90,13 @@ function FindWindow_ClassName_WindowText(className as string, windowText as stri
     windowText_ = windowText
     g_hWnd = 0
     call EnumWindows(addressOf FindWindow_ClassName_WindowText_cb, byVal 0&)
-    FindWindow_ClassName_WindowText_cb = g_hWnd
+    FindWindow_ClassName_WindowText = g_hWnd
 end function ' }
 
 function FindWindow_ClassName_WindowText_cb(byVal hWnd as long, byVal lParam as long) as long ' {
 
-'   dim windowText  as string
-'   dim windowClass as string * 256
-    dim retVal      as long
+    if GetClassName_(hWnd) = className_ and GetWindowText_(hWnd) = windowText_  then
 
-    if GetClassName_(hWnd) = className_ and GetwindowText_(hWnd) = windowText_  then
-
-'      debug.print "Window with class " & captionPart_ & " found, hWnd = " & hWnd
        g_hWnd = hWnd
        FindWindow_ClassName_WindowText_cb = false
        exit function
@@ -114,4 +105,10 @@ function FindWindow_ClassName_WindowText_cb(byVal hWnd as long, byVal lParam as 
 
     FindWindow_ClassName_WindowText_cb = true
 
+end function ' }
+
+function GetWindowRect_(hWnd as long) as RECT ' {
+    dim r as RECT
+    GetWindowRect hWnd, r
+    GetWindowRect_ = r
 end function ' }
