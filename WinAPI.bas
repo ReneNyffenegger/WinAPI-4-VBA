@@ -270,9 +270,9 @@ public const WM_SYSKEYUP    = &h0105
          byVal lpEnumFunc   as long, _
          byVal lParam       as long)   as long
 
-    declare function FindWindow          lib "user32"  alias "FindWindowA" ( _
-         byVal lpClassName  as string, _
-         byVal lpWindowName as string) as long
+  '
+  ' FindWindow: Find the top level window that matches lpClassName (if not null) and
+  ' lpWindowName (if not null).
   '
   ' Some Class Names
   '   MS Access:           OMain
@@ -280,6 +280,10 @@ public const WM_SYSKEYUP    = &h0105
   '   MS Outlook:          rctrl_renwnd32
   '   MS Word:             OpusApp
   '   Visual Basic Editor: wndclass_desked_gsk
+  '
+    declare function FindWindow          lib "user32"  alias "FindWindowA" ( _
+         byVal lpClassName  as string, _
+         byVal lpWindowName as string) as long
 
     declare function FindWindowEx        lib "user32"  alias "FindWindowExA"      ( _
          byVal hWnd           as long  , _
