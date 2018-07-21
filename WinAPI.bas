@@ -1,20 +1,41 @@
 option explicit
 
-type INPUT_     '   typedef struct tagINPUT {
+' { Types
+type INPUT_     '   typedef struct tagINPUT ' {
   dwType      as long
   wVK         as integer
   wScan       as integer         '               KEYBDINPUT ki;
   dwFlags     as long            '               HARDWAREINPUT hi;
-  dwTime      as long            '           };
-  dwExtraInfo as long            '   } INPUT, *PINPUT;
+  dwTime      as long            '           '};
+  dwExtraInfo as long            '   '} INPUT, *PINPUT;
   dwPadding   as currency        '   8 extra bytes, because mouses take more.
+end type ' }
+
+type WNDCLASSEX ' {
+    cbSize         as long
+    style          as long        ' See CS_* constants
+'   lpfnwndproc    as longPtr
+    lpfnwndproc    as long
+    cbClsextra     as long
+    cbWndExtra     as long
+    hInstance      as longPtr
+    hIcon          as longPtr
+    hCursor        as longPtr
+    hbrBackground  as longPtr
+'   hInstance      as long
+'   hIcon          as long
+'   hCursor        as long
+'   hbrBackground  as long
+    lpszMenuName   as string
+    lpszClassName  as string
+    hIconSm        as longPtr
+'   hIconSm        as long
 end type ' }
 
 public const INPUT_KEYBOARD   as long = 1
 public const MAPVK_VK_TO_CHAR as long = 2 ' Used in MapVirtualKey
 public const MAPVK_VK_TO_VSC  as long = 0 ' Used in MapVirtualKey
 public const KEYEVENTF_KEYUP  as long = 2 ' Used for dwFlags in INPUT_
-
 
 type KBDLLHOOKSTRUCT ' {
      vkCode      as long ' virtual key code in range 1 .. 254
@@ -36,7 +57,6 @@ type RECT ' {
    bottom   as long
 end type ' }
 
-
 type MSG ' {
     hWnd    as long
     message as long
@@ -45,6 +65,40 @@ type MSG ' {
     time    as long
     pt      as POINTAPI
 end type ' }
+
+type PAINTSTRUCT ' {
+ '  hdc                  as longPtr
+    hdc                  as long
+    fErase               as long
+    rcPaint              as RECT
+    fRestore             as long
+    fIncUpdate           as long
+    rgbReserved(0 To 31) as byte
+    'rgbReserved(32) as Byte 'this was declared incorrectly in VB API viewer
+end type ' }
+
+' }
+' { Constants
+' CS_* - WindowClass styles / see WNDCLASSEX {
+public const CS_HREDRAW                     = &H2
+public const CS_VREDRAW                     = &H1
+' }
+
+public const CW_USEDEFAULT  = &H80000000
+
+' { DT constants, used for DrawText
+public const DT_CENTER     = &h01
+public const DT_SINGLELINE = &h20
+public const DT_VCENTER    = &h04
+' }
+
+' EVENT_* constants ' {
+'      Used for 
+public const EVENT_OBJECT_CREATE     = &h8000
+public const EVENT_OBJECT_DESTROY    = &h8001
+public const EVENT_OBJECT_SHOW       = &h8002
+public const EVENT_SYSTEM_FOREGROUND = &h0003
+' }
 
 public const HC_ACTION               = 0
 
@@ -60,6 +114,11 @@ public const HWND_TOPMOST   = -1
 
 ' }
 
+' IDC_ARROW, See -> LoadCursor
+public const IDC_ARROW                = 32512&
+' IDI_APPLICATION, See -> LoadIcon
+public const IDI_APPLICATION          = 32512&
+
 public const PM_REMOVE  as long = &H1
 
 ' SW_* constants for ShowWindow() {
@@ -72,6 +131,7 @@ public const SW_SHOW            =  5 ' Activates the window.
 public const SW_SHOWMAXIMIZED   =  3 ' Activates the window and displays it as a maximized window.
 public const SW_SHOWMINIMIZED   =  2 ' Activates the window and displays it as a minimized window.
 public const SW_SHOWMINNOACTIVE =  7 ' Displays the window as a minimized window (without activating the window).
+public const SW_NORMAL          =  1
 public const SW_SHOWNA          =  8 ' Displays the window in its current size and position (without activating the window).
 public const SW_SHOWNOACTIVATE  =  4 ' Displays a window in its most recent size and position (without activating the window).
 public const SW_SHOWNORMAL      =  1 ' Activates and displays a window.
@@ -226,40 +286,139 @@ public const VK_EXSEL                = &h0f8
 public const VK_PLAY                 = &h0fa
 public const VK_NONAME               = &h0fc ' }
 
+'  WH_* constants used for SetWindowsHookEx {
 '
-'      Constants used for SetWindowsHookEx
-'
-public const WH_SHELL       = 10 ' Notification of shell events, such as creation of top level windows.
+public const WH_CBT         =  5
 public const WH_KEYBOARD_LL = 13 ' Low level keyboard events
-
+public const WH_SHELL       = 10 ' Notification of shell events, such as creation of top level windows.
+' }
+' { WM_*: Window messsages
 public const WM_CHAR        = &h0102
+public const WM_CLOSE       = &H0010
+public const WM_DESTROY     = &H0002
 public const WM_KEYDOWN     = &h0100
 public const WM_KEYUP       = &h0101
+public const WM_PAINT       = &H000F
 public const WM_SETTEXT     = &h000C
 public const WM_SYSKEYDOWN  = &h0104
 public const WM_SYSKEYUP    = &h0105
+' }
 
+' { WS_* / Window styles
+public const WS_VISIBLE             = &H10000000
+public const WS_VSCROLL             = &H200000
+public const WS_TABSTOP             = &H10000
+public const WS_THICKFRAME          = &H40000
+public const WS_MAXIMIZE            = &H1000000
+public const WS_MAXIMIZEBOX         = &H10000
+public const WS_MINIMIZE            = &H20000000
+public const WS_MINIMIZEBOX         = &H20000
+public const WS_SYSMENU             = &H80000
+public const WS_BORDER              = &H800000
+public const WS_DLGFRAME            = &H400000
+public const WS_CAPTION             = WS_BORDER or WS_DLGFRAME
+public const WS_CHILD               = &H40000000
+public const WS_CHILDWINDOW         = WS_CHILD
+public const WS_CLIPCHILDREN        = &H2000000
+public const WS_CLIPSIBLINGS        = &H4000000
+public const WS_DISABLED            = &H8000000
+public const WS_EX_ACCEPTFILES      = &H10&
+public const WS_EX_DLGMODALFRAME    = &H1&
+public const WS_EX_NOPARENTNOTIFY   = &H4&
+public const WS_EX_STATICEDGE       = &H20000
+public const WS_EX_TOPMOST          = &H8&
+public const WS_EX_TRANSPARENT      = &H20&
+public const WS_GROUP               = &H20000
+public const WS_HSCROLL             = &H100000
+public const WS_ICONIC              = WS_MINIMIZE
+public const WS_OVERLAPPED          = &H0&
+public const WS_OVERLAPPEDWINDOW    = WS_OVERLAPPED or WS_CAPTION or WS_SYSMENU or WS_THICKFRAME or WS_MINIMIZEBOX or WS_MAXIMIZEBOX
+public const WS_POPUP               = &H80000000
+public const WS_POPUPWINDOW         = WS_POPUP or WS_BORDER or WS_SYSMENU
+public const WS_SIZEBOX             = WS_THICKFRAME
+public const WS_TILED               = WS_OVERLAPPED
+public const WS_TILEDWINDOW         = WS_OVERLAPPEDWINDOW
+' }
 
+' { Brushes - used for GetStockObject
+public const WHITE_BRUSH = 0
+public const BLACK_BRUSH = 4
+' }
 
+public const WINEVENT_OUTOFCONTEXT    = 0
+public const WINEVENT_SKIPOWNPROCESS  = 2
+' }
 #if VBA7 then ' 32-Bit versions of Excel ' {
 
+' { A
     declare function AttachThreadInput Lib "user32"                        ( _
     	 byVal idAttach       as long, _
     	 byVal idAttachTo     as long, _
     	 byVal fAttach        as long) as long
 
+' }
+' { B
     declare function Beep                lib "kernel32"                    ( _
          byVal dwFreq       as long, _
          byVal dwDuration   as long) as long
 
+    declare ptrSafe function BeginPaint  lib "user32"                      ( _
+         byVal hwnd as longPtr, _
+         lpPaint    as PAINTSTRUCT) as longPtr
+
     declare function BringWindowToTop    lib "user32"                      ( _
          byVal lngHWnd      as long) as long
 
+' }
+' { C
     declare function CallNextHookEx      lib "user32"                      ( _
          byVal hHook        as long, _
          byVal nCode        as long, _
          byVal wParam       as long, _
                lParam       as any ) as long
+    ' CreateWindowEx {
+    declare ptrSafe function CreateWindowEx lib "user32"      alias "CreateWindowExA" ( _
+         byVal dwExStyle       as long   , _
+         byVal lpClassName     as string , _
+         byVal lpWindowName    as string , _
+         byVal dwStyle         as long   , _
+         byVal x               as long   , _
+         byVal y               as long   , _
+         byVal nWidth          as long   , _
+         byVal nHeight         as long   , _
+         byVal hWndParent      as longPtr, _
+         byVal hMenu           as longPtr, _
+         byVal hInstance       as longPtr, _
+               lpParam as any) as longPtr
+    ' }
+
+' }
+' { D
+
+  ' DefWindowProc {
+    declare ptrSafe function DefWindowProc lib "user32" alias "DefWindowProcA" ( _
+         byVal hwnd   as longPtr, _
+         byVal wMsg   as long   , _
+         byVal wParam as longPtr, _
+         byVal lParam as longPtr) as longPtr
+  ' }
+
+    declare ptrSafe function DispatchMessage lib "user32" alias "DispatchMessageA" (lpMsg as MSG) as longPtr
+
+  ' { DrawText
+  '      Use a combination of DT constants for wFormat
+    declare ptrSafe function DrawText     lib "user32" alias "DrawTextA"   ( _
+         byVal  hdc     as longPtr, _
+         byVal  lpStr   as string , _
+         byVal  nCount  as long   , _
+                lpRect  as RECT   , _
+         byVal  wFormat as long) as long
+  ' }
+' }
+' { E
+
+    declare ptrSafe function EndPaint     lib "user32"                     ( _
+         byVal hwnd         as longPtr, lpPaint as PAINTSTRUCT) as long
 
     declare function EnumChildWindows     lib "user32"                     ( _
          byVal hWndParent   as long, _
@@ -269,6 +428,8 @@ public const WM_SYSKEYUP    = &h0105
     declare function EnumWindows         lib "user32"                      ( _
          byVal lpEnumFunc   as long, _
          byVal lParam       as long)   as long
+' }
+' { F
 
   '
   ' FindWindow: Find the top level window that matches lpClassName (if not null) and
@@ -290,7 +451,8 @@ public const WM_SYSKEYUP    = &h0105
          byVal hWndChildAfter as long  , _
          byVal lpClassName    as string, _
          byVal lpWindowName   as string) as long
-
+' }
+' { G
     declare function GetActiveWindow     lib "user32"   () as long
 
     declare function GetClassName        lib "user32.dll"   alias "GetClassNameA" ( _
@@ -298,13 +460,18 @@ public const WM_SYSKEYUP    = &h0105
          byVal lpClassName    as string, _
          byVal nMaxCount      as long) as long
 
+    declare ptrSafe function GetClientRect lib "user32"                                ( _
+         byVal hwnd as longPtr,   _
+         lpRect     as RECT  ) as long
 
-  ' GetComputerName reads the NetBIOS name from the registry when the system is
-  ' started up.
+
+  ' GetComputerName reads the NetBIOS name from the registry when the system is {
+  ' started upc
   '
     declare function GetComputerName     lib "kernel32"     alias "GetComputerNameA"   ( _
          byVal lpBuffer       as string, _
          byRef nSize          as long) as long
+  ' }
 
     declare function GetCurrentThreadId  lib "kernel32" () as long
 
@@ -312,16 +479,28 @@ public const WM_SYSKEYUP    = &h0105
 
     declare function GetForegroundWindow lib "user32"   () as long
 
+    declare ptrSafe function GetMessage  lib "user32" alias "GetMessageA"                 ( _
+               lpMsg         as MSG    , _
+         byVal hwnd          as longPtr, _
+         byVal wMsgFilterMin as long   , _
+         byVal wMsgFilterMax as long) as long
+
     declare function GetKeyboardLayout   lib "user32"       alias "GetKeyboardLayout"     ( _
          byVal pwszKLID       as string) as long
 
-    declare function GetLastError        lib "kernel32" () as long
+    declare ptrSafe function GetLastError  lib "kernel32" () as long
 
     declare function GetModuleHandle     lib "kernel32"     alias "GetModuleHandleA"      ( _
          byVal lpModuleName as string) as long
 
     declare function GetParent           lib "user32"                                     ( _
          byVal hwnd           as long  ) as long
+
+    ' { GetStockObject
+    '   See also predefined brushes (such as WHITE_BRUSH, BLACK_BRUSH etc.)
+    declare ptrSafe function GetStockObject lib "gdi32"                                   ( _
+         byVal nIndex         as long  ) as longPtr
+    ' }
 
     declare function GetTempFileName     lib "kernel32"     alias "GetTempFileNameA"      ( _
          byVal lpszPath       as string, _
@@ -352,10 +531,29 @@ public const WM_SYSKEYUP    = &h0105
     declare function GetUserName         lib "advapi32.dll" alias "GetUserNameA"          ( _
          byVal lpBuffer       as string, _
                nSize          as long    ) as long
-
+' }
+' { I
     declare function IsIconic            lib "user32"                                     ( _
          byVal hwnd           as long) as long
+' }
+' { L
 
+  ' LoadCursor {
+  '      See also constants IDC_ARROW etc
+    declare ptrSafe function LoadCursor  lib "user32"       alias "LoadCursorA"           ( _
+         byVal hInstance      as longPtr, _
+         byVal lpCursorName   as String ) as longPtr
+  ' }
+
+  ' LoadIcon {
+  '   See also -> IDI_APPLICATION
+    declare ptrSafe function LoadIcon    lib "user32"       alias "LoadIconA"             ( _
+         byVal hInstance      as longPtr,                                                   _
+         byVal lpIconName     as string) as longPtr
+  ' }
+
+' }
+' { M
     declare function MapVirtualKey       lib "user32"       alias "MapVirtualKeyA"        ( _
          byVal wCode          as long,   _
          byVal wMapType       as long) as long
@@ -364,7 +562,8 @@ public const WM_SYSKEYUP    = &h0105
          byVal wCode          as long, _
          byVal wMapType       as long, _
          byVal dwhkl          as long) as long
-
+' }
+' { P
     declare function PeekMessage         lib "user32"       alias "PeekMessageA" ( _
          byRef lpMsg          as MSG , _
          byVal hwnd           as long, _
@@ -372,12 +571,22 @@ public const WM_SYSKEYUP    = &h0105
          byVal wMsgFilterMax  as long, _
          byVal wRemoveMsg     as long) as long
 
-    declare function PostMessage         lib "user32"       alias "PostMessageA" ( _
-         byVal hwnd   as long, _
-         byVal wMsg   as long, _
-         byVal wParam as long, _
+    declare ptrSafe function PostMessage     lib "user32"   alias "PostMessageA" ( _
+         byVal hwnd   as longPtr, _
+         byVal wMsg   as long   , _
+         byVal wParam as longPtr, _
                lParam as any) as long
 
+    declare ptrSafe sub PostQuitMessage      lib "user32" (byVal nExitCode as long)
+
+' }
+' { R
+    ' RegisterClassEx {
+    declare ptrSafe function RegisterClassEx lib "user32"   alias "RegisterClassExA"  ( _
+               pcWndClassEx   as WNDCLASSEX ) as integer
+    ' }
+' }
+' { S
     declare function SendInput           lib "user32"                                 ( _
          byVal nInputs as long, _
          byRef pInputs as any , _
@@ -388,6 +597,10 @@ public const WM_SYSKEYUP    = &h0105
          byVal wMsg   as long, _
          byVal wParam as long, _
                lParam as any) as long
+
+' { Set *
+
+    declare ptrSafe function SetFocus    lib "user32" (byVal hwnd as longPtr) as longPtr
 
     declare function SetForegroundWindow lib "user32" (byVal hWnd as long) as long
 
@@ -413,6 +626,18 @@ public const WM_SYSKEYUP    = &h0105
          byVal hWnd            as long  , _
          byVal lpString        as string) as long
 
+    ' SetWinEventHook. The counter-function is UnhookWinEvent {
+    '
+    declare function SetWinEventHook     lib "user32.dll"                             ( _
+         byVal eventMin          as long  , _
+         byVal eventMax          as long  , _
+         byVal hmodWinEventProc  as long  , _
+         byVal pfnWinEventProc   as long  , _
+         byVal idProcess         as long  , _
+         byVal idThread          as long  , _
+         byVal dwFlags           as long) as long
+    ' }
+' }
     declare function ShellExecute Lib "shell32.dll"         alias "ShellExecuteA"     ( _
          byVal hwnd         as long  , _
          byVal lpOperation  as string, _
@@ -421,22 +646,42 @@ public const WM_SYSKEYUP    = &h0105
          byVal lpDirectory  as string, _
          byval lpShowCmd    as long)      as long
 
-    declare function ShowWindow          lib "user32" ( _
-         byVal hwnd       as long, _
-         byVal nCmdSHow   as long) as long
+  ' ShowWindow {
   '
   ' Use one of the SW*_ constants for nCmdSHow
   '
+    declare ptrSafe function ShowWindow          lib "user32" ( _
+         byVal hwnd       as long, _
+         byVal nCmdSHow   as long) as long
+  ' }
 
     declare sub      Sleep               lib "kernel32" (byVal dwMilliseconds as long   )
-    declare function TranslateMessage    lib "user32" (byRef lpMsg as MSG) as long
+' }
+' { T
+    ' TranslateMessage translates virtual-key messages into character messages. {
+    declare ptrSafe function TranslateMessage    lib "user32" (byRef lpMsg as MSG) as long
+    ' }
+' }
+' { U
+    ' UnhookWinEvent: unhook hooks established with SetWinEventHook {
+    '
+    declare function UnhookWinEvent      lib "user32.dll"                             ( _
+         byRef hWinEventHook as long) as long
+    ' }
 
-    declare function UnhookWindowsHookEx lib "user32" (ByVal hHook as long) as long
+    declare         function UnhookWindowsHookEx  lib "user32" (ByVal hHook as long   ) as long
 
+    declare ptrSafe Function UpdateWindow         lib "user32" (byVal hwnd  as longPtr) as long
+
+' }
+' { V
     declare function VkKeyScan           lib "user32"       alias "VkKeyScanA"        ( _
          byVal cChar      as byte) as integer
 
+' }
+' { W
     declare function WaitMessage         lib "user32" () as long
+' }
 ' }
 #else ' 64-Bit versions of Excel ' {
 
