@@ -79,12 +79,18 @@ end type ' }
 
 ' }
 ' { Constants
+
+' { C
+
 ' CS_* - WindowClass styles / see WNDCLASSEX {
 public const CS_HREDRAW                     = &H2
 public const CS_VREDRAW                     = &H1
 ' }
 
+' Used in CreateWindowEx to indicate default position and dimension.
 public const CW_USEDEFAULT  = &H80000000
+
+' }
 
 ' { DT constants, used for DrawText
 public const DT_CENTER     = &h01
@@ -100,6 +106,7 @@ public const EVENT_OBJECT_SHOW       = &h8002
 public const EVENT_SYSTEM_FOREGROUND = &h0003
 ' }
 
+' { H
 public const HC_ACTION               = 0
 
 public const HSHELL_WINDOWCREATED    = 1  ' Top-level unowned window has been created. Used in WH_SHELL callback.
@@ -113,13 +120,24 @@ public const HWND_TOP       =  0
 public const HWND_TOPMOST   = -1
 
 ' }
-
+' }
 ' IDC_ARROW, See -> LoadCursor
 public const IDC_ARROW                = 32512&
 ' IDI_APPLICATION, See -> LoadIcon
 public const IDI_APPLICATION          = 32512&
 
+' { L
+
+public const LB_ADDSTRING             =  &h0180
+
+' List box styles
+public const LBS_HASSTRINGS           =  &H40
+
+' }
+
 public const PM_REMOVE  as long = &H1
+
+' { S
 
 ' SW_* constants for ShowWindow() {
 public const SW_FORCEMINIMIZE   = 11 ' Minimizes a window.
@@ -151,6 +169,8 @@ public const SWP_NOOWNERZORDER  as long = &h200
 public const SWP_NOSENDCHANGING as long = &h400
 public const SWP_DEFERERASE     as long = &h2000
 public const SWP_ASYNCWINDOWPOS as long = &h4000
+' }
+
 ' }
 
 public const VK_LBUTTON              = &h001 ' { Virtual keys
@@ -286,6 +306,7 @@ public const VK_EXSEL                = &h0f8
 public const VK_PLAY                 = &h0fa
 public const VK_NONAME               = &h0fc ' }
 
+' { W
 '  WH_* constants used for SetWindowsHookEx {
 '
 public const WH_CBT         =  5
@@ -295,11 +316,13 @@ public const WH_SHELL       = 10 ' Notification of shell events, such as creatio
 ' { WM_*: Window messsages
 public const WM_CHAR        = &h0102
 public const WM_CLOSE       = &H0010
+public const Wm_CREATE      = &H0001
 public const WM_DESTROY     = &H0002
 public const WM_KEYDOWN     = &h0100
 public const WM_KEYUP       = &h0101
 public const WM_PAINT       = &H000F
 public const WM_SETTEXT     = &h000C
+public const WM_SIZE        = &h0005
 public const WM_SYSKEYDOWN  = &h0104
 public const WM_SYSKEYUP    = &h0105
 ' }
@@ -340,13 +363,15 @@ public const WS_TILED               = WS_OVERLAPPED
 public const WS_TILEDWINDOW         = WS_OVERLAPPEDWINDOW
 ' }
 
+public const WINEVENT_OUTOFCONTEXT    = 0
+public const WINEVENT_SKIPOWNPROCESS  = 2
+' }
+
 ' { Brushes - used for GetStockObject
 public const WHITE_BRUSH = 0
 public const BLACK_BRUSH = 4
 ' }
 
-public const WINEVENT_OUTOFCONTEXT    = 0
-public const WINEVENT_SKIPOWNPROCESS  = 2
 ' }
 #if VBA7 then ' 32-Bit versions of Excel ' {
 
@@ -395,6 +420,9 @@ public const WINEVENT_SKIPOWNPROCESS  = 2
   ' }
 
   ' CreateWindowEx {
+  '
+  ' See CW_USEDEFAULT for x, y, nWidth and nHeight
+  '
     declare ptrSafe function CreateWindowEx lib "user32"      alias "CreateWindowExA" ( _
          byVal dwExStyle       as long   , _
          byVal lpClassName     as string , _
@@ -584,6 +612,15 @@ public const WINEVENT_SKIPOWNPROCESS  = 2
          byVal wCode          as long, _
          byVal wMapType       as long, _
          byVal dwhkl          as long) as long
+
+    declare ptrSafe function MoveWindow  lib "user32"       alias "MoveWindow"            ( _
+         byVal hwnd           as longPtr, _
+         byVal x              as long   , _
+         byVal y              as long   , _
+         byVal nWidth         as long   , _
+         byVal nHeight        as long   , _
+         byVal bRepaint       as long ) as long
+
 ' }
 ' { P
 
@@ -715,3 +752,28 @@ public const WINEVENT_SKIPOWNPROCESS  = 2
 
 
 #end if ' }
+' Helpers {
+
+function LOBYTE(dw as long) as byte ' {
+    LOBYTE = dw and &h000000ff
+end function ' }
+
+function LOWORD(dw as long) as long ' {
+    if dw And &H8000& then
+        LOWORD = &H8000 Or (dw And &H7FFF&)
+    else
+        LOWORD = dw And &HFFFF&
+    end if
+end function ' }
+
+function HIWORD(dw as long) as long ' {
+
+    if dw and &H80000000 then
+       HIWORD = (dw \ 65535) - 1
+    else
+       HIWORD = dw \ 65535
+    end if
+
+end function ' }
+
+' }
