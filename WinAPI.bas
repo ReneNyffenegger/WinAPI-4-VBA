@@ -371,12 +371,30 @@ public const WINEVENT_SKIPOWNPROCESS  = 2
 
 ' }
 ' { C
+
+  ' CallNextHookEx {
     declare function CallNextHookEx      lib "user32"                      ( _
          byVal hHook        as long, _
          byVal nCode        as long, _
          byVal wParam       as long, _
                lParam       as any ) as long
-    ' CreateWindowEx {
+  ' }
+
+
+    declare function CloseHandle         lib "kernel32"                    ( _
+         byVal hObject            as long) as long
+
+  ' CreateThread {
+    declare function CreateThread        lib "kernel32"                    ( _
+               lpThreadAttributes as any , _
+         byVal dwStackSize        as long, _
+         byVal lpStartAddress     as long, _
+         byVal lParameter         as long, _
+         byVal dwCreationFlags    as long, _
+               lpThreadID         as long) as long
+  ' }
+
+  ' CreateWindowEx {
     declare ptrSafe function CreateWindowEx lib "user32"      alias "CreateWindowExA" ( _
          byVal dwExStyle       as long   , _
          byVal lpClassName     as string , _
@@ -479,11 +497,15 @@ public const WINEVENT_SKIPOWNPROCESS  = 2
 
     declare function GetForegroundWindow lib "user32"   () as long
 
+  ' GetMessage {
+  '      When GetMessage (and PeekMessage) encounter a WM_QUIT message, they will
+  '      return 0.
     declare ptrSafe function GetMessage  lib "user32" alias "GetMessageA"                 ( _
                lpMsg         as MSG    , _
          byVal hwnd          as longPtr, _
          byVal wMsgFilterMin as long   , _
          byVal wMsgFilterMax as long) as long
+  ' }
 
     declare function GetKeyboardLayout   lib "user32"       alias "GetKeyboardLayout"     ( _
          byVal pwszKLID       as string) as long
@@ -564,12 +586,16 @@ public const WINEVENT_SKIPOWNPROCESS  = 2
          byVal dwhkl          as long) as long
 ' }
 ' { P
+
+  ' PeekMessage {
+  '      See also -> GetMessage
     declare function PeekMessage         lib "user32"       alias "PeekMessageA" ( _
          byRef lpMsg          as MSG , _
          byVal hwnd           as long, _
          byVal wMsgFilterMin  as long, _
          byVal wMsgFilterMax  as long, _
          byVal wRemoveMsg     as long) as long
+  ' }
 
     declare ptrSafe function PostMessage     lib "user32"   alias "PostMessageA" ( _
          byVal hwnd   as longPtr, _
