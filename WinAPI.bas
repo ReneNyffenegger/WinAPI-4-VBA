@@ -91,13 +91,14 @@ public const CS_VREDRAW                     = &H1
 public const CW_USEDEFAULT  = &H80000000
 
 ' }
-
+' { D
 ' { DT constants, used for DrawText
 public const DT_CENTER     = &h01
 public const DT_SINGLELINE = &h20
 public const DT_VCENTER    = &h04
 ' }
-
+' }
+' { E
 ' EVENT_* constants ' {
 '      Used for 
 public const EVENT_OBJECT_CREATE     = &h8000
@@ -105,9 +106,17 @@ public const EVENT_OBJECT_DESTROY    = &h8001
 public const EVENT_OBJECT_SHOW       = &h8002
 public const EVENT_SYSTEM_FOREGROUND = &h0003
 ' }
-
+' }
+' { F
+public const FORMAT_MESSAGE_FROM_SYSTEM    = &h1000
+public const FORMAT_MESSAGE_IGNORE_INSERTS = &h0200
+public const FORMAT_MESSAGE_TEXT_LEN       = &h00a0
+' }
 ' { H
 public const HC_ACTION               = 0
+
+' Used for nCode in CBTProc (SetWindowsHookEx / WH_CBT).
+public const HCBT_ACTIVATE           = 5
 
 public const HSHELL_WINDOWCREATED    = 1  ' Top-level unowned window has been created. Used in WH_SHELL callback.
 
@@ -121,11 +130,12 @@ public const HWND_TOPMOST   = -1
 
 ' }
 ' }
+' { I
 ' IDC_ARROW, See -> LoadCursor
 public const IDC_ARROW                = 32512&
 ' IDI_APPLICATION, See -> LoadIcon
 public const IDI_APPLICATION          = 32512&
-
+' }
 ' { L
 
 public const LB_ADDSTRING             =  &h0180
@@ -134,9 +144,9 @@ public const LB_ADDSTRING             =  &h0180
 public const LBS_HASSTRINGS           =  &H40
 
 ' }
-
+' { P
 public const PM_REMOVE  as long = &H1
-
+' }
 ' { S
 
 ' SW_* constants for ShowWindow() {
@@ -172,7 +182,7 @@ public const SWP_ASYNCWINDOWPOS as long = &h4000
 ' }
 
 ' }
-
+' { V
 public const VK_LBUTTON              = &h001 ' { Virtual keys
 public const VK_RBUTTON              = &h002
 public const VK_CANCEL               = &h003 ' Implemented as Ctrl-Break on most keyboards
@@ -305,7 +315,7 @@ public const VK_ATTN                 = &h0f6
 public const VK_EXSEL                = &h0f8
 public const VK_PLAY                 = &h0fa
 public const VK_NONAME               = &h0fc ' }
-
+' }
 ' { W
 '  WH_* constants used for SetWindowsHookEx {
 '
@@ -497,6 +507,15 @@ public const BLACK_BRUSH = 4
          byVal hWndChildAfter as long  , _
          byVal lpClassName    as string, _
          byVal lpWindowName   as string) as long
+
+    declare ptrSafe function FormatMessage lib "kernel32" alias "FormatMessageA"  ( _
+         byVal dwFlags        as long  , _
+               lpSource       as any   , _
+         byVal dwMessageId    as long  , _
+         byVal dwLanguageId   as long  , _
+         byVal lpBuffer       as string, _
+         byVal nSize          as long  , _
+               Arguments      as longPtr) as long
 ' }
 ' { G
     declare function GetActiveWindow     lib "user32"   () as long
