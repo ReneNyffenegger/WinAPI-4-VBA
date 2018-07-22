@@ -5,8 +5,7 @@ dim hookStarted as boolean
 
 public cnt as long
 
-
-function LowLevelKeyboardProc(ByVal nCode As Long, ByVal wParam As Long, lParam As KBDLLHOOKSTRUCT) As Long ' {
+function LowLevelKeyboardProc(byVal nCode as long, byVal wParam as long, lParam as KBDLLHOOKSTRUCT) as long ' {
 
     dim upOrDown as string
     dim altKey   as boolean
@@ -73,7 +72,7 @@ function LowLevelKeyboardProc(ByVal nCode As Long, ByVal wParam As Long, lParam 
 
     if lParam.vkCode = VK_ESCAPE then stopHook
 
-    LowLevelKeyboardProc = CallNextHookEx(0, nCode, wParam, ByVal lParam)
+    LowLevelKeyboardProc = CallNextHookEx(0, nCode, wParam, byVal lParam)
 
 end function ' }
 
@@ -87,7 +86,6 @@ public sub stopHook() ' {
     cells.clear
 
 end sub ' }
-
 
 sub installHook() ' {
 
