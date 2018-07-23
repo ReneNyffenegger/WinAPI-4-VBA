@@ -87,6 +87,8 @@ public const CS_HREDRAW                     = &H2
 public const CS_VREDRAW                     = &H1
 ' }
 
+public const CF_TEXT                        = 1
+
 ' Used in CreateWindowEx to indicate default position and dimension.
 public const CW_USEDEFAULT  = &H80000000
 
@@ -100,7 +102,7 @@ public const DT_VCENTER    = &h04
 ' }
 ' { E
 ' EVENT_* constants ' {
-'      Used for 
+'      Used for SetWinEventHook
 public const EVENT_OBJECT_CREATE     = &h8000
 public const EVENT_OBJECT_DESTROY    = &h8001
 public const EVENT_OBJECT_SHOW       = &h8002
@@ -111,6 +113,9 @@ public const EVENT_SYSTEM_FOREGROUND = &h0003
 public const FORMAT_MESSAGE_FROM_SYSTEM    = &h1000
 public const FORMAT_MESSAGE_IGNORE_INSERTS = &h0200
 public const FORMAT_MESSAGE_TEXT_LEN       = &h00a0
+' }
+' { G
+public const GHND                          = &h42
 ' }
 ' { H
 public const HC_ACTION               = 0
@@ -415,6 +420,7 @@ public const BLACK_BRUSH = 4
                lParam       as any ) as long
   ' }
 
+    declare function CloseClipboard      lib "User32" () as long
 
     declare function CloseHandle         lib "kernel32"                    ( _
          byVal hObject            as long) as long
@@ -473,6 +479,8 @@ public const BLACK_BRUSH = 4
 ' }
 ' { E
 
+    declare function EmptyClipboard       lib "User32" () as long
+
     declare ptrSafe function EndPaint     lib "user32"                     ( _
          byVal hwnd         as longPtr, lpPaint as PAINTSTRUCT) as long
 
@@ -518,7 +526,11 @@ public const BLACK_BRUSH = 4
                Arguments      as longPtr) as long
 ' }
 ' { G
+  ' GetActiveWindow {
+  ' Returns the window of the *calling thread* that receives input (Hmmm... is this not the window returned with GetFocus())
+  ' Compare GetForegroundWindow
     declare function GetActiveWindow     lib "user32"   () as long
+  ' }
 
     declare function GetClassName        lib "user32.dll"   alias "GetClassNameA" ( _
          byVal hWnd           as long, _
@@ -540,9 +552,15 @@ public const BLACK_BRUSH = 4
 
     declare function GetCurrentThreadId  lib "kernel32" () as long
 
+    declare function GetCursorPos Lib "User32" (lpPoint As POINTAPI) as long
+
     declare function GetDesktopWindow    lib "user32"   () as long
 
+  ' GetForegroundWindow {
+  ' Returns the window that currently receives input.
+  ' Compare with GetActiveWindow()
     declare function GetForegroundWindow lib "user32"   () as long
+  ' }
 
   ' GetMessage {
   '      When GetMessage (and PeekMessage) encounter a WM_QUIT message, they will
@@ -600,12 +618,33 @@ public const BLACK_BRUSH = 4
     declare function GetUserName         lib "advapi32.dll" alias "GetUserNameA"          ( _
          byVal lpBuffer       as string, _
                nSize          as long    ) as long
+
+    declare function GlobalAlloc         lib "kernel32"                                  ( _
+         byVal wFlags         as long, _
+         byVal dwBytes        as long) as long
+
+  ' GlobalLock {
+  '      Compare with GlobalUnlock
+    declare function GlobalLock          lib "kernel32"                                  ( _
+         byVal hMem          as long) as long
+  ' }
+
+  ' GlobalUnlock {
+  '     Compare with GlobalLock
+    declare function GlobalUnlock        lib "kernel32"                                  ( _
+         byVal hMem           as long   ) as long
+  ' }
+
 ' }
 ' { I
     declare function IsIconic            lib "user32"                                     ( _
          byVal hwnd           as long) as long
 ' }
 ' { L
+
+    declare function lstrcpy Lib "kernel32"                                               ( _
+         byVal lpString1 as any, _
+         byVal lpString2 as any) as long
 
   ' LoadCursor {
   '      See also constants IDC_ARROW etc
@@ -641,6 +680,10 @@ public const BLACK_BRUSH = 4
          byVal bRepaint       as long ) as long
 
 ' }
+' { O
+    declare function OpenClipboard       lib "User32"                                    ( _
+         byVal hwnd           as long) as long
+' }
 ' { P
 
   ' PeekMessage {
@@ -674,11 +717,15 @@ public const BLACK_BRUSH = 4
          byRef pInputs as any , _
          byVal cbSize  as long) as long
 
-    declare function SendMessage         lib "user32"       alias "SendMessageA" ( _
+    declare function SendMessage         lib "user32"       alias "SendMessageA"      ( _
          byVal hwnd   as long, _
          byVal wMsg   as long, _
          byVal wParam as long, _
                lParam as any) as long
+
+    declare function SetClipboardData    lib "User32"                                 ( _
+         byVal wFormat as long, _
+         byVal hMem    as long) as long
 
 ' { Set *
 
