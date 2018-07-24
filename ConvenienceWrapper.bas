@@ -5,6 +5,40 @@ global captionPart_ as string
 global className_   as string
 global windowText_  as string
 
+sub clipboardPutText(txt as string)
+   dim memory          as long
+   dim lockedMemory    as long
+
+   memory       = GlobalAlloc(GHND, len(txt) + 1)
+   if memory = 0 then
+      msgBox "GlobalAlloc failed"
+      exit sub
+   end if
+
+   lockedMemory = GlobalLock(memory)
+   if lockedMemory = 0 then
+      msgBox "GlobalLock failed"
+      exit sub
+   end if
+
+   lockedMemory = lstrcpy(lockedMemory, txt)
+
+   call GlobalUnlock(memory)
+
+   if openClipboard(0) = 0 Then
+      msgBox "openClipboard failed"
+      exit sub
+   end if
+
+   call EmptyClipboard()
+
+   call SetClipboardData(CF_TEXT, memory)
+
+   if CloseClipboard() = 0 then
+      msgBox "CloseClipboard failed"
+   end if
+end sub
+
 function GetwindowText_(hWnd as long) as long ' {
     dim retVal      as long
     dim windowText  as string
