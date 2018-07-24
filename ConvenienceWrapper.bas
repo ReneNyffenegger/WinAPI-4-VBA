@@ -74,6 +74,30 @@ function GetComputerName_() as string ' {
 
 end function ' }
 
+function GetLastErrorText() as string ' {
+    dim errNo  as long
+    dim rc     as long
+    dim langId as long
+
+    errNo = GetLastError()
+    GetLastErrorText = string$(FORMAT_MESSAGE_TEXT_LEN, chr(0))
+
+    langId = 0
+
+    rc = FormatMessage (                                                _
+           FORMAT_MESSAGE_FROM_SYSTEM or FORMAT_MESSAGE_IGNORE_INSERTS, _
+           0                                                          , _
+           errNo                                                      , _
+           langId                                                     , _
+           GetLastErrorText                                           , _
+           FORMAT_MESSAGE_TEXT_LEN                                    , _
+           0)
+
+    if rc = 0 then
+       GetLastErrorText = errNo
+    end if
+end function ' }
+
 function FindWindow_WindowNameContains(captionPart as string) as long ' {
     captionPart_ = captionPart
     call EnumWindows(addressOf FindWindow_WindowNameContains_cb, byVal 0&)
@@ -159,7 +183,7 @@ function GetWindowRect_(hWnd as long) as RECT ' {
     GetWindowRect hWnd, r
     GetWindowRect_ = r
 end function ' }
- 
+
 sub shellOpen(path as string) ' {
     ShellExecute 0, "Open", path, "", "", 1
 end sub ' }
