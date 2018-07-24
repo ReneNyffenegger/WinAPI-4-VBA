@@ -39,12 +39,11 @@ sub clipboardPutText(txt as string) ' {
    end if
 end sub ' }
 
-function GetwindowText_(hWnd as long) as long ' {
+function GetWindowText_(hWnd as long) as string ' {
     dim retVal      as long
-    dim windowText  as string
 
     GetwindowText_ = space(GetWindowTextLength(hWnd) + 1)
-    retVal         = GetWindowText(hWnd, windowText, len(windowText))
+    retVal         = GetWindowText(hWnd, GetWindowText_, len(GetwindowText_))
     GetWindowText_ = left$(GetwindowText_, retVal)
 
 end function ' }
@@ -54,10 +53,7 @@ function GetClassName_(hWnd as long) as string ' {
     dim retVal      as long
 
     retVal = GetClassName(hWnd, windowClass, 255)
-'   windowClass = left(windowClass, retVal)
     GetClassName_ = left(windowClass, retVal)
-
- '  GetClassName_ = windowClass
 
 end function ' }
 
@@ -163,3 +159,7 @@ function GetWindowRect_(hWnd as long) as RECT ' {
     GetWindowRect hWnd, r
     GetWindowRect_ = r
 end function ' }
+ 
+sub shellOpen(path as string) ' {
+    ShellExecute 0, "Open", path, "", "", 1
+end sub ' }
