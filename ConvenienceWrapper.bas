@@ -5,7 +5,7 @@ global captionPart_ as string
 global className_   as string
 global windowText_  as string
 
-sub clipboardPutText(txt as string)
+sub clipboardPutText(txt as string) ' {
    dim memory          as long
    dim lockedMemory    as long
 
@@ -37,7 +37,7 @@ sub clipboardPutText(txt as string)
    if CloseClipboard() = 0 then
       msgBox "CloseClipboard failed"
    end if
-end sub
+end sub ' }
 
 function GetwindowText_(hWnd as long) as long ' {
     dim retVal      as long
