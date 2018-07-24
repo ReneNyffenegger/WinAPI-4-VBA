@@ -495,9 +495,7 @@ public const BLACK_BRUSH = 4
 ' }
 ' { F
 
-  '
-  ' FindWindow: Find the top level window that matches lpClassName (if not null) and
-  ' lpWindowName (if not null).
+  ' FindWindow: Find the top level window that matches lpClassName (if not null) and lpWindowName (if not null). {
   '
   ' Some Class Names
   '   MS Access:           OMain
@@ -509,12 +507,14 @@ public const BLACK_BRUSH = 4
     declare function FindWindow          lib "user32"  alias "FindWindowA" ( _
          byVal lpClassName  as string, _
          byVal lpWindowName as string) as long
-
+  ' }
+  ' FindWindowEx {
     declare function FindWindowEx        lib "user32"  alias "FindWindowExA"      ( _
-         byVal hWnd           as long  , _
+         byVal hWndParent     as long  , _
          byVal hWndChildAfter as long  , _
          byVal lpClassName    as string, _
          byVal lpWindowName   as string) as long
+  ' }
 
     declare ptrSafe function FormatMessage lib "kernel32" alias "FormatMessageA"  ( _
          byVal dwFlags        as long  , _
