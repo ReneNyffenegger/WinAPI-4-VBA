@@ -194,7 +194,7 @@ sub SendInputText(text as string) ' {
 '   dim input_    as INPUT_
     dim input_(1) as INPUT_
     dim sizeINPUT as long
-    
+
     sizeINPUT = lenB(input_(0))
 
     input_(0).dwType = INPUT_KEYBOARD
