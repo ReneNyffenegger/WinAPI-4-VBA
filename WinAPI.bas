@@ -148,6 +148,8 @@ public const LB_ADDSTRING             =  &h0180
 ' List box styles
 public const LBS_HASSTRINGS           =  &H40
 
+public const LOCALE_SNAME             =  &h0000005c
+
 ' }
 ' { P
 public const PM_REMOVE  as long = &H1
@@ -561,7 +563,14 @@ public const BLACK_BRUSH = 4
   ' Compare with GetActiveWindow()
     declare function GetForegroundWindow lib "user32"   () as long
   ' }
-
+  ' GetLocaleInfo {
+  '      Microsoft says that GetLocaleInfoEx is now preferred (for interoperability reasons).
+    declare ptrSafe function GetLocaleInfo lib "kernel32" alias "GetLocaleInfoA"          ( _
+         byVal lcid          as long  , _
+         byVal dwInfoType    as long  , _
+         byVal lpSrcStr      as string, _
+         byVal cchSrc        as long  ) as long
+  ' }
   ' GetMessage {
   '      When GetMessage (and PeekMessage) encounter a WM_QUIT message, they will
   '      return 0.
@@ -588,6 +597,9 @@ public const BLACK_BRUSH = 4
     declare ptrSafe function GetStockObject lib "gdi32"                                   ( _
          byVal nIndex         as long  ) as longPtr
     ' }
+  ' GetSystemDefaultLangID {
+    declare ptrSafe function GetSystemDefaultLangID lib "kernel32" alias "GetSystemDefaultLangID" () as integer
+  ' }
 
     declare function GetTempFileName     lib "kernel32"     alias "GetTempFileNameA"      ( _
          byVal lpszPath       as string, _
@@ -655,9 +667,15 @@ public const BLACK_BRUSH = 4
 
   ' LoadIcon {
   '   See also -> IDI_APPLICATION
-    declare ptrSafe function LoadIcon    lib "user32"       alias "LoadIconA"             ( _
-         byVal hInstance      as longPtr,                                                   _
+    declare ptrSafe function LoadIcon           lib "user32" alias "LoadIconA"             ( _
+         byVal hInstance      as longPtr,   _
          byVal lpIconName     as string) as longPtr
+  ' }
+  ' LoadKeyboardLayout {
+  ' TODO: VkKeyScanEx loadkeyboardlayout makelangid LANG_SYSTEM_DEFAULT LANG_USER_DEFAULT
+    declare ptrSafe function LoadKeyboardLayout lib "user32" alias "LoadKeyboardLayoutA"   ( _
+         byVal pwszKLID       as string,  _
+         byVal flags          as long)   as longPtr
   ' }
 
 ' }
@@ -806,6 +824,10 @@ public const BLACK_BRUSH = 4
 ' { V
     declare function VkKeyScan           lib "user32"       alias "VkKeyScanA"        ( _
          byVal cChar      as byte) as integer
+
+    declare ptrSafe function VkKeyScanEx lib "user32"       alias "VkKeyScanExA"      ( _
+         byVal ch         as byte    , _
+         byVal dwhkl      as longPtr ) as integer
 
 ' }
 ' { W
