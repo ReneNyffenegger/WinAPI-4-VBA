@@ -202,7 +202,7 @@ sub SendInputText(text as string) ' {
     for i = 0 to len(text) - 1 ' {
         c = mid(text, i+1, 1)
 
-        debug.print "c = " & c
+'       debug.print "c = " & c
 
         input_(0).dwFlags = 0
 
