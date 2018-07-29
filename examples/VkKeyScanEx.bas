@@ -2,7 +2,7 @@ option explicit
 
 dim keyboardLayout as long
 
-sub main()
+sub main() ' {
 
 
     keyboardLayout = GetKeyboardLayout(0)
@@ -13,8 +13,7 @@ sub main()
     showCharInfo "+"
 '   showCharInfo chr(1)
 
-
-end sub
+end sub ' }
 
 sub showCharInfo(char as string) ' {
 

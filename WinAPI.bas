@@ -580,9 +580,10 @@ public const BLACK_BRUSH = 4
          byVal wMsgFilterMin as long   , _
          byVal wMsgFilterMax as long) as long
   ' }
-
+  ' GetKeyboardLayout {
     declare function GetKeyboardLayout   lib "user32"       alias "GetKeyboardLayout"     ( _
-         byVal pwszKLID       as string) as long
+         byVal idThread      as long )  as long
+  ' }
 
     declare ptrSafe function GetLastError  lib "kernel32" () as long
 

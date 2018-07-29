@@ -195,33 +195,81 @@ sub SendInputText(text as string) ' {
     dim input_(1) as INPUT_
     dim sizeINPUT as long
 
+    dim shift     as boolean
+    dim keyScan   as integer
+    dim vkKey     as integer
+
+    dim keyboardLayout as long
+
     sizeINPUT = lenB(input_(0))
+
+ '  keyboardLayout = GetKeyboardLayout(0)
+    keyboardLayout = GetKeyboardLayout(GetWindowThreadProcessId(GetForegroundWindow(), 0))
 
     input_(0).dwType = INPUT_KEYBOARD
 
     for i = 0 to len(text) - 1 ' {
         c = mid(text, i+1, 1)
 
-'       debug.print "c = " & c
+        keyScan   = VkKeyScanEx(asc(c), keyboardLayout)
+        shift     = keyScan and &h100
+        vkKey     = keyScan and &h0ff
 
         input_(0).dwFlags = 0
-
-        if c >= "A" and c<= "Z" then ' {
+ 
+        if shift then ' if c >= "A" and c<= "Z" then ' {
            input_(0).wVK = VK_LSHIFT
            SendInput 1, input_(0), sizeINPUT
         end if ' }
-
-
-        input_(0).wVK = VkKeyScan(asc(lcase(c)))
+ 
+        input_(0).wVK = vkKey ' input_(0).wVK = VkKeyScan(asc(lcase(c)))
         SendInput 1, input_(0), sizeINPUT
 
         input_(0).dwFlags = KEYEVENTF_KEYUP
         SendInput 1, input_(0), sizeINPUT
-
-        if c >= "A" and c<= "Z" then ' {
+ 
+        if shift then ' if c >= "A" and c<= "Z" then ' {
            input_(0).wVK = VK_LSHIFT
            SendInput 1, input_(0), sizeINPUT
         end if ' }
 
     next i ' }
+
 end sub ' }
+
+' sub SendInputTextOld(text as string) ' {
+'     dim i         as long
+'     dim c         as string
+' '   dim input_    as INPUT_
+'     dim input_(1) as INPUT_
+'     dim sizeINPUT as long
+' 
+'     sizeINPUT = lenB(input_(0))
+' 
+'     input_(0).dwType = INPUT_KEYBOARD
+' 
+'     for i = 0 to len(text) - 1 ' {
+'         c = mid(text, i+1, 1)
+' 
+'         input_(0).dwFlags = 0
+' 
+'         if c >= "A" and c<= "Z" then ' {
+'            input_(0).wVK = VK_LSHIFT
+'            SendInput 1, input_(0), sizeINPUT
+'         end if ' }
+' 
+' 
+'         input_(0).wVK = VkKeyScan(asc(lcase(c)))
+'         SendInput 1, input_(0), sizeINPUT
+' 
+'         input_(0).dwFlags = KEYEVENTF_KEYUP
+'         SendInput 1, input_(0), sizeINPUT
+' 
+'         if c >= "A" and c<= "Z" then ' {
+'            input_(0).wVK = VK_LSHIFT
+'            SendInput 1, input_(0), sizeINPUT
+'         end if ' }
+' 
+'     next i ' }
+' 
+' end sub ' }
