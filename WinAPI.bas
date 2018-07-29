@@ -825,9 +825,14 @@ public const BLACK_BRUSH = 4
     declare function VkKeyScan           lib "user32"       alias "VkKeyScanA"        ( _
          byVal cChar      as byte) as integer
 
+  ' VkKeyScanEx {
+  '      Convert a "character" into a *xvirtual key code* and a *shift state*.
+  '      dwhkl apparently refers to a kayboard layout which can be optained
+  '      with GetKeyboardLayout.
     declare ptrSafe function VkKeyScanEx lib "user32"       alias "VkKeyScanExA"      ( _
          byVal ch         as byte    , _
          byVal dwhkl      as longPtr ) as integer
+  ' }
 
 ' }
 ' { W
