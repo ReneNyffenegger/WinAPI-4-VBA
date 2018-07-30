@@ -199,6 +199,8 @@ sub SendInputText(text as string) ' {
     dim keyScan   as integer
     dim vkKey     as integer
 
+    dim isEscaped  as boolean
+
     dim keyboardLayout as long
 
     sizeINPUT = lenB(input_(0))
@@ -208,31 +210,52 @@ sub SendInputText(text as string) ' {
 
     input_(0).dwType = INPUT_KEYBOARD
 
+    isEscaped = false
     for i = 0 to len(text) - 1 ' {
         c = mid(text, i+1, 1)
 
-        keyScan   = VkKeyScanEx(asc(c), keyboardLayout)
-        shift     = keyScan and &h100
-        vkKey     = keyScan and &h0ff
+        if isEscaped then ' {
+
+           if c = "n" then ' {
+              vkKey     = VK_RETURN
+              isEscaped = false
+              shift     = false
+           else
+              debug.print "Unhandled escaped character " & c
+              goto skip_iteration
+           end if
+        else
+
+           if c = "\" then ' {
+              isEscaped = true
+              goto skip_iteration
+           end if ' }
+
+           keyScan   = VkKeyScanEx(asc(c), keyboardLayout)
+           shift     = keyScan and &h100
+           vkKey     = keyScan and &h0ff
+
+        end if
 
         input_(0).dwFlags = 0
- 
+
         if shift then ' if c >= "A" and c<= "Z" then ' {
            input_(0).wVK = VK_LSHIFT
            SendInput 1, input_(0), sizeINPUT
         end if ' }
- 
+
         input_(0).wVK = vkKey ' input_(0).wVK = VkKeyScan(asc(lcase(c)))
         SendInput 1, input_(0), sizeINPUT
 
         input_(0).dwFlags = KEYEVENTF_KEYUP
         SendInput 1, input_(0), sizeINPUT
- 
+
         if shift then ' if c >= "A" and c<= "Z" then ' {
            input_(0).wVK = VK_LSHIFT
            SendInput 1, input_(0), sizeINPUT
         end if ' }
 
+        skip_iteration:
     next i ' }
 
 end sub ' }
