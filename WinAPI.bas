@@ -156,6 +156,12 @@ public const PM_REMOVE  as long = &H1
 ' }
 ' { S
 
+' SM_* constants for GetSystemMetrics() {
+public const SM_CMONITORS       = 80 ' Number of display monitors
+public const SM_CXSCREEN        =  0 ' Width of primary monitor
+public const SM_CYSCREEN        =  1 ' Height of primary monitor
+public const SM_SLOWMACHINE     = 73 ' Non zero if slow (low-end) processor
+' }
 ' SW_* constants for ShowWindow() {
 public const SW_FORCEMINIMIZE   = 11 ' Minimizes a window.
 public const SW_HIDE            =  0 ' Hides the window and activates another window.
@@ -600,6 +606,12 @@ public const BLACK_BRUSH = 4
     ' }
   ' GetSystemDefaultLangID {
     declare ptrSafe function GetSystemDefaultLangID lib "kernel32" alias "GetSystemDefaultLangID" () as integer
+  ' }
+
+  ' GetSystemMetric {
+  '    nIndex is one of the SM_* constants.
+    declare ptrSafe function GetSystemMetrics       lib "user32"                          ( _
+         byVal nIndex         as long) as long
   ' }
 
     declare function GetTempFileName     lib "kernel32"     alias "GetTempFileNameA"      ( _
