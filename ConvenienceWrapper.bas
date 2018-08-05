@@ -184,8 +184,8 @@ function GetWindowRect_(hWnd as long) as RECT ' {
     GetWindowRect_ = r
 end function ' }
 
-sub shellOpen(path as string) ' {
-    ShellExecute 0, "Open", path, "", "", 1
+sub shellOpen(path as string, optional parameters as string = vbNullString, optional directory as string = vbNullString) ' {
+    ShellExecute 0, "Open", path, parameters, directory, 1
 end sub ' }
 
 sub SendInputText(text as string) ' {
@@ -266,33 +266,33 @@ end sub ' }
 ' '   dim input_    as INPUT_
 '     dim input_(1) as INPUT_
 '     dim sizeINPUT as long
-' 
+'
 '     sizeINPUT = lenB(input_(0))
-' 
+'
 '     input_(0).dwType = INPUT_KEYBOARD
-' 
+'
 '     for i = 0 to len(text) - 1 ' {
 '         c = mid(text, i+1, 1)
-' 
+'
 '         input_(0).dwFlags = 0
-' 
+'
 '         if c >= "A" and c<= "Z" then ' {
 '            input_(0).wVK = VK_LSHIFT
 '            SendInput 1, input_(0), sizeINPUT
 '         end if ' }
-' 
-' 
+'
+'
 '         input_(0).wVK = VkKeyScan(asc(lcase(c)))
 '         SendInput 1, input_(0), sizeINPUT
-' 
+'
 '         input_(0).dwFlags = KEYEVENTF_KEYUP
 '         SendInput 1, input_(0), sizeINPUT
-' 
+'
 '         if c >= "A" and c<= "Z" then ' {
 '            input_(0).wVK = VK_LSHIFT
 '            SendInput 1, input_(0), sizeINPUT
 '         end if ' }
-' 
+'
 '     next i ' }
-' 
+'
 ' end sub ' }
