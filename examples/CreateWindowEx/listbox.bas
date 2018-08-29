@@ -94,7 +94,7 @@ function WindowProc(              _
              "listbox"                                              , _
               0                                                     , _
               LBS_HASSTRINGS or WS_CHILD or WS_VISIBLE or WS_VSCROLL, _
-              0, 0, 0, 0,                                             _
+              0, 0, 0, 0                                            , _
               hWnd                                                  , _
               0, 0, 0 )
 
