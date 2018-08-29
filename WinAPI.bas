@@ -57,6 +57,12 @@ type RECT ' {
    bottom   as long
 end type ' }
 
+public type MODULEINFO ' {
+   lpBaseOfDll                as long
+   SizeOfImage                as long
+   EntryPoint                 as long
+end type ' }
+
 type MSG ' {
     hWnd    as long
     message as long
@@ -150,6 +156,9 @@ public const LBS_HASSTRINGS           =  &H40
 
 public const LOCALE_SNAME             =  &h0000005c
 
+' }
+' { M
+public const MAX_PATH as integer = 260
 ' }
 ' { P
 public const PM_REMOVE  as long = &H1
@@ -400,9 +409,9 @@ public const BLACK_BRUSH = 4
 
 ' { A
     declare function AttachThreadInput Lib "user32"                        ( _
-    	 byVal idAttach       as long, _
-    	 byVal idAttachTo     as long, _
-    	 byVal fAttach        as long) as long
+       byVal idAttach       as long, _
+       byVal idAttachTo     as long, _
+       byVal fAttach        as long) as long
 
 ' }
 ' { B
@@ -489,8 +498,15 @@ public const BLACK_BRUSH = 4
 
     declare function EmptyClipboard       lib "User32" () as long
 
+    declare function EnumProcessModules   lib "PSAPI.DLL"                  ( _
+         byVal hProcess     as long, _
+               lphModule    as long, _
+         byVal cb           as long, _
+               lpcbNeeded   as long     ) as long
+
     declare ptrSafe function EndPaint     lib "user32"                     ( _
-         byVal hwnd         as longPtr, lpPaint as PAINTSTRUCT) as long
+         byVal hwnd         as longPtr, _
+               lpPaint      as PAINTSTRUCT) as long
 
     declare function EnumChildWindows     lib "user32"                     ( _
          byVal hWndParent   as long, _
@@ -558,6 +574,8 @@ public const BLACK_BRUSH = 4
          byRef nSize          as long) as long
   ' }
 
+    declare ptrSafe function GetCurrentProcess lib "kernel32" () as longPtr
+
     declare function GetCurrentThreadId  lib "kernel32" () as long
 
     declare function GetCursorPos Lib "User32" (lpPoint As POINTAPI) as long
@@ -586,6 +604,24 @@ public const BLACK_BRUSH = 4
          byVal wMsgFilterMin as long   , _
          byVal wMsgFilterMax as long) as long
   ' }
+
+    declare function GetModuleBaseName    lib "PSAPI.DLL" alias "GetModuleBaseNameA"      ( _
+         byVal hProcess   as long  , _
+         byVal hModule    as long  , _
+         byVal lpFilename as string, _
+         byVal nSize      as long) as long
+
+    declare function GetModuleFileNameEx  lib "PSAPI"    alias "GetModuleFileNameExA"     ( _
+         byVal hProcess   as long, _
+         byVal hModule    as long, _
+         byVal lpFilename as string, nSize as long) as boolean
+
+    declare function GetModuleInformation lib "PSAPI"                                     ( _
+         byVal hProcess      as long      , _
+         byVal hModule       as long      , _
+               LPMODULEINFO  as MODULEINFO, _
+               cb            as long          ) as boolean
+
   ' GetKeyboardLayout {
     declare function GetKeyboardLayout   lib "user32"       alias "GetKeyboardLayout"     ( _
          byVal idThread      as long )  as long
@@ -630,7 +666,7 @@ public const BLACK_BRUSH = 4
 
     declare function GetWindowThreadProcessId lib "user32"                                ( _
          byVal hwnd           as long, _
-    	         lpdwProcessId  as long) as long
+               lpdwProcessId  as long) as long
 
     declare function GetWindowText       lib "user32"       alias "GetWindowTextA"        ( _
          byVal hWnd           as long  , _
@@ -714,6 +750,12 @@ public const BLACK_BRUSH = 4
 ' { O
     declare function OpenClipboard       lib "User32"                                    ( _
          byVal hwnd           as long) as long
+
+
+    declare function OpenProcess         lib "kernel32"                                  ( _
+         byVal dwDesiredAccess as long, _
+         byVal bInheritHandle  as long, _
+         byVal dwProcessId as long) as long
 ' }
 ' { P
 
