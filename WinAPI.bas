@@ -516,6 +516,12 @@ public const BLACK_BRUSH = 4
     declare function EnumWindows         lib "user32"                      ( _
          byVal lpEnumFunc   as long, _
          byVal lParam       as long)   as long
+         
+    declare function EnumDisplayMonitors lib "user32"                      ( _
+         byVal hdc          as long, _
+         byVal lprcClip     as long, _
+         byVal lpfnEnum     as long, _
+         byVal dwData       as long) as long         
 ' }
 ' { F
 
