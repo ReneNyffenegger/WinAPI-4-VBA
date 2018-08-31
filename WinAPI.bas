@@ -442,6 +442,11 @@ public const BLACK_BRUSH = 4
     declare function CloseHandle         lib "kernel32"                    ( _
          byVal hObject            as long) as long
 
+    declare ptrSafe sub      RtlMoveMemory lib "kernel32"                  ( _
+         byRef dest               as any    , _
+         ByRef source             as any    , _
+         byVal size               as longPtr)
+
   ' CreateThread {
     declare function CreateThread        lib "kernel32"                    ( _
                lpThreadAttributes as any , _
@@ -562,16 +567,17 @@ public const BLACK_BRUSH = 4
     declare function GetActiveWindow     lib "user32"   () as long
   ' }
 
+  ' GetClassName { 
     declare function GetClassName        lib "user32.dll"   alias "GetClassNameA" ( _
          byVal hWnd           as long, _
          byVal lpClassName    as string, _
          byVal nMaxCount      as long) as long
-
+  ' }
+  ' GetClientRect {
     declare ptrSafe function GetClientRect lib "user32"                                ( _
          byVal hwnd as longPtr,   _
          lpRect     as RECT  ) as long
-
-
+  ' }
   ' GetComputerName reads the NetBIOS name from the registry when the system is {
   ' started upc
   '
@@ -601,6 +607,7 @@ public const BLACK_BRUSH = 4
          byVal lpSrcStr      as string, _
          byVal cchSrc        as long  ) as long
   ' }
+  ' GetM* {
   ' GetMessage {
   '      When GetMessage (and PeekMessage) encounter a WM_QUIT message, they will
   '      return 0.
@@ -627,7 +634,7 @@ public const BLACK_BRUSH = 4
          byVal hModule       as long      , _
                LPMODULEINFO  as MODULEINFO, _
                cb            as long          ) as boolean
-
+  ' GetM }
   ' GetKeyboardLayout {
     declare function GetKeyboardLayout   lib "user32"       alias "GetKeyboardLayout"     ( _
          byVal idThread      as long )  as long
@@ -640,6 +647,10 @@ public const BLACK_BRUSH = 4
 
     declare function GetParent           lib "user32"                                     ( _
          byVal hwnd           as long  ) as long
+
+    declare function GetProcAddress      lib "kernel32"                                   ( _
+         byVal module         as long  , _
+         byVal ProcName       as string) as long
 
     ' { GetStockObject
     '   See also predefined brushes (such as WHITE_BRUSH, BLACK_BRUSH etc.)
@@ -883,6 +894,23 @@ public const BLACK_BRUSH = 4
 
 ' }
 ' { V
+
+  ' VirtualAlloc
+  ' See also VirtualFree
+    declare ptrSafe function VirtualAlloc lib "kernel32"                              ( _
+         byVal address        as longPtr, _
+         byVal size           as longPtr, _
+         byVal allocationType as long   , _
+         byVal protect        as long) as longPtr
+   ' }
+   ' virtualFree {
+   ' See also VirtualAlloc
+     declare ptrSafe function VirtualFree lib "kernel32" ( _
+         byVal lpAddress      as longPtr, _
+         byVal size           as longPtr, _
+         byVal dwFreeType     as long   ) as long
+
+   ' }
     declare function VkKeyScan           lib "user32"       alias "VkKeyScanA"        ( _
          byVal cChar      as byte) as integer
 
