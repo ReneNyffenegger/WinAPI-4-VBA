@@ -521,12 +521,12 @@ public const BLACK_BRUSH = 4
     declare function EnumWindows         lib "user32"                      ( _
          byVal lpEnumFunc   as long, _
          byVal lParam       as long)   as long
-         
+
     declare function EnumDisplayMonitors lib "user32"                      ( _
          byVal hdc          as long, _
          byVal lprcClip     as long, _
          byVal lpfnEnum     as long, _
-         byVal dwData       as long) as long         
+         byVal dwData       as long) as long
 ' }
 ' { F
 
@@ -567,7 +567,7 @@ public const BLACK_BRUSH = 4
     declare function GetActiveWindow     lib "user32"   () as long
   ' }
 
-  ' GetClassName { 
+  ' GetClassName {
     declare function GetClassName        lib "user32.dll"   alias "GetClassNameA" ( _
          byVal hWnd           as long, _
          byVal lpClassName    as string, _
@@ -592,7 +592,17 @@ public const BLACK_BRUSH = 4
 
     declare function GetCursorPos Lib "User32" (lpPoint As POINTAPI) as long
 
-    declare function GetDesktopWindow    lib "user32"   () as long
+    declare function GetDesktopWindow       lib "user32"   () as long
+
+    declare function GetEnvironmentVariable lib "kernel32" alias "GetEnvironmentVariableA" ( _
+         byVal lpName         as string, _
+         byVal lpBuffer       as string, _
+         byVal nSize          as long) as long
+
+    declare function GetEnvironmentVariable lib "kernel32" alias "GetEnvironmentVariableA" ( _
+         byVal lpName         as string, _
+         byVal lpBuffer       as string, _
+         byVal nSize          as long) as long
 
   ' GetForegroundWindow {
   ' Returns the window that currently receives input.
@@ -818,6 +828,10 @@ public const BLACK_BRUSH = 4
          byVal hMem    as long) as long
 
 ' { Set *
+
+    declare function SetEnvironmentVariable lib "kernel32" alias "SetEnvironmentVariableA" ( _
+         byVal lpName  as string, _
+         byVal lpValue as string) as long
 
     declare ptrSafe function SetFocus    lib "user32" (byVal hwnd as longPtr) as longPtr
 

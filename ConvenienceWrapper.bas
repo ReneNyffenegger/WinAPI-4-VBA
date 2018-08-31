@@ -74,6 +74,13 @@ function GetComputerName_() as string ' {
 
 end function ' }
 
+function GetEnvironmentVariable_(name as string) as string ' {
+    dim envVar as string * 4096 ' Yes... I had a case where a length of 3696 was needed!
+    dim length as long
+    length = GetEnvironmentVariable(name, envVar, 4096)
+    GetEnvironmentVariable_ = left$(envVar, length)
+end function ' }
+
 function GetLastErrorText() as string ' {
     dim errNo  as long
     dim rc     as long
