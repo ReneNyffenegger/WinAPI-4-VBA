@@ -599,11 +599,6 @@ public const BLACK_BRUSH = 4
          byVal lpBuffer       as string, _
          byVal nSize          as long) as long
 
-    declare function GetEnvironmentVariable lib "kernel32" alias "GetEnvironmentVariableA" ( _
-         byVal lpName         as string, _
-         byVal lpBuffer       as string, _
-         byVal nSize          as long) as long
-
   ' GetForegroundWindow {
   ' Returns the window that currently receives input.
   ' Compare with GetActiveWindow()
