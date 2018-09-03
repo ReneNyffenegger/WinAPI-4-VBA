@@ -159,8 +159,17 @@ public const LOCALE_SNAME             =  &h0000005c
 ' }
 ' { M
 public const MAX_PATH as integer = 260
+
+' MEM_*: Used for VirtualAlloc or VirtualFree
+public const MEM_RESERVE_AND_COMMIT       as long = &H3000
+public const MEM_RELEASE                  as long = &H8000
+
 ' }
 ' { P
+
+' Use for flProtect in VirtualAlloc:
+public const PAGE_EXECUTE_RW              as long = &H40
+
 public const PM_REMOVE  as long = &H1
 ' }
 ' { S
@@ -905,15 +914,18 @@ public const BLACK_BRUSH = 4
 ' { V
 
   ' VirtualAlloc
-  ' See also VirtualFree
+  ' - Use one of the MEM_* constants for flAllocationType
+  ' - Use PAGE_* for flProtect
+  ' - See also VirtualFree
     declare ptrSafe function VirtualAlloc lib "kernel32"                              ( _
-         byVal address        as longPtr, _
-         byVal size           as longPtr, _
-         byVal allocationType as long   , _
-         byVal protect        as long) as longPtr
+         byVal address          as longPtr, _
+         byVal size             as longPtr, _
+         byVal flAllocationType as long   , _
+         byVal flProtect        as long) as longPtr
    ' }
-   ' virtualFree {
-   ' See also VirtualAlloc
+   ' VirtualFree {
+   ' - See also MEM_*
+   ' - See also VirtualAlloc
      declare ptrSafe function VirtualFree lib "kernel32" ( _
          byVal lpAddress      as longPtr, _
          byVal size           as longPtr, _
