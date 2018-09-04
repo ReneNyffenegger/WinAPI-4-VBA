@@ -50,6 +50,14 @@ type POINTAPI ' {
     y as long
 end type ' }
 
+
+type PROCESS_INFORMATION ' { Used for CreateProcess()
+    hProcess    as longPtr
+    hThread     as longPtr
+    dwProcessId as long
+    dwThreadId  as long
+end type ' }
+
 type RECT ' {
    left     as long
    top      as long
@@ -82,6 +90,36 @@ type PAINTSTRUCT ' {
     rgbReserved(0 To 31) as byte
     'rgbReserved(32) as Byte 'this was declared incorrectly in VB API viewer
 end type ' }
+
+
+Type SECURITY_ATTRIBUTES ' { Used for CreateProcess()
+    nLength              As Long
+    lpSecurityDescriptor As LongPtr
+    bInheritHandle       As Long
+End Type ' }
+
+type STARTUPINFO ' { Used for CreateProcess
+    cb              As Long
+    lpReserved      As String
+    lpDesktop       As String
+    lpTitle         As String
+    dwX             As Long
+    dwY             As Long
+    dwXSize         As Long
+    dwYSize         As Long
+    dwXCountChars   As Long
+    dwYCountChars   As Long
+    dwFillAttribute As Long
+    dwFlags         As Long
+    wShowWindow     As Integer
+    cbReserved2     As Integer
+    lpReserved2     As Byte
+    hStdInput       As LongPtr
+    hStdOutput      As LongPtr
+    hStdError       As LongPtr
+end type ' }
+
+
 
 ' }
 ' { Constants
@@ -455,6 +493,18 @@ public const BLACK_BRUSH = 4
          byRef dest               as any    , _
          ByRef source             as any    , _
          byVal size               as longPtr)
+         
+    declare ptrSafe function CreateProcess lib "kernel32" alias "CreateProcessA" ( _
+         byVal lpApplicationName    as string             , _
+         byVal lpCommandLine        as string             , _
+               lpProcessAttributes  as SECURITY_ATTRIBUTES, _
+               lpThreadAttributes   as SECURITY_ATTRIBUTES, _
+         byVal bInheritHandles      as long               , _
+         byVal dwCreationFlags      as long               , _
+               lpEnvironment        as any                , _
+         byVal lpCurrentDriectory   as string             , _
+               lpStartupInfo        as STARTUPINFO        , _
+               lpProcessInformation as PROCESS_INFORMATION) as longPtr
 
   ' CreateThread {
     declare function CreateThread        lib "kernel32"                    ( _
