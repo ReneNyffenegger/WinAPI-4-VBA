@@ -1,5 +1,6 @@
 option explicit
 
+
 ' { Types
 type INPUT_     '   typedef struct tagINPUT ' {
   dwType      as long
@@ -9,6 +10,84 @@ type INPUT_     '   typedef struct tagINPUT ' {
   dwTime      as long            '           '};
   dwExtraInfo as long            '   '} INPUT, *PINPUT;
   dwPadding   as currency        '   8 extra bytes, because mouses take more.
+end type ' }
+
+
+private type IMAGE_DATA_DIRECTORY ' {
+    RVA  as long ' Relative VA
+    Size as long
+end type ' }
+
+private const IMAGE_NUMBEROF_DIRECTORY_ENTRIES = 16
+
+type IMAGE_EXPORT_DIRECTORY_TABLE ' {
+  Characteristics         as  long
+  TimeDateStamp           as  long
+  MajorVersion            as  integer
+  MinorVersion            as  integer
+  Name                    as  long
+  Base                    as  long
+  NumberOfFunctions       as  long
+  NumberOfNames           as  long
+  pAddressOfFunctions     as  long
+  pAddressOfNames         as  long
+  pAddressOfNameOrdinals  as  long
+end type ' }
+
+type IMAGE_OPTIONAL_HEADER ' {
+ ' Standard fields.
+   Magic                                                 as  integer
+   MajorLinkerVersion                                    as  byte
+   MinorLinkerVersion                                    as  byte
+   SizeOfCode                                            as  long
+   SizeOfInitializedData                                 as  long
+   SizeOfUninitializedData                               as  long
+   AddressOfEntryPoint                                   as  long
+   BaseOfCode                                            as  long
+   BaseOfData                                            as  long
+ ' NT additional fields.
+   ImageBase                                             as  long
+   SectionAlignment                                      as  long
+   FileAlignment                                         as  long
+   MajorOperatingSystemVersion                           as  integer
+   MinorOperatingSystemVersion                           as  integer
+   MajorImageVersion                                     as  integer
+   MinorImageVersion                                     as  integer
+   MajorSubsystemVersion                                 as  integer
+   MinorSubsystemVersion                                 as  integer
+   Win32VersionValue                                     as  long
+   SizeOfImage                                           as  long
+   SizeOfHeaders                                         as  long
+   CheckSum                                              as  long
+   Subsystem                                             as  integer
+   DllCharacteristics                                    as  integer
+   SizeOfStackReserve                                    as  long
+   SizeOfStackCommit                                     as  long
+   SizeOfHeapReserve                                     as  long
+   SizeOfHeapCommit                                      as  long
+   LoaderFlags                                           as  long
+   NumberOfRvaAndSizes                                   as  long
+'  Data directories
+   DataDirectory(0 to IMAGE_NUMBEROF_DIRECTORY_ENTRIES)  as  IMAGE_DATA_DIRECTORY ' 17*8 + 96 = 232
+end type ' }
+
+type IMAGE_COFF_HEADER ' { COFF file header
+   Machine               as  integer
+   NumberOfSections      as  integer
+   TimeDateStamp         as  long
+   PointerToSymbolTable  as  long
+   NumberOfSymbols       as  long
+   SizeOfOptionalHeader  as  integer
+   Characteristics       as  integer
+end type ' }
+
+type IMAGE_PE_FILE_HEADER ' {
+  '
+  ' Same structure as IMAGE_NT_HEADER?
+  '
+    Signature      as long
+    FileHeader     as IMAGE_COFF_HEADER
+    OptionalHeader as IMAGE_OPTIONAL_HEADER
 end type ' }
 
 type WNDCLASSEX ' {
@@ -50,7 +129,6 @@ type POINTAPI ' {
     y as long
 end type ' }
 
-
 type PROCESS_INFORMATION ' { Used for CreateProcess()
     hProcess    as longPtr
     hThread     as longPtr
@@ -63,6 +141,26 @@ type RECT ' {
    top      as long
    right    as long
    bottom   as long
+end type ' }
+
+type LIST_ENTRY ' { Used by LOADED_IMAGE
+  FLink as long
+  Blink as long
+end type ' }
+
+type LOADED_IMAGE ' 48 bytes (46 bytes packed) ' { Used with MapAndLoad
+  ModuleName       as long
+  hFile            as long
+  MappedAddress    as long ' Base address of mapped file
+  pFileHeader      as long ' Pointer to IMAGE_PE_FILE_HEADER
+  pLstRvaSection   as long ' Pointer to first COFF section header (section table)??
+  NumberOfSections as long
+  pSections        as long ' Pointer to first COFF section header (section table)??
+  Characteristics  as long ' Image characteristics value
+  fSystemImage     as Byte
+  fDOSImage        as Byte
+  Links            as LIST_ENTRY ' 2 longs
+  SizeOfImage      as long
 end type ' }
 
 public type MODULEINFO ' {
@@ -87,36 +185,36 @@ type PAINTSTRUCT ' {
     rcPaint              as RECT
     fRestore             as long
     fIncUpdate           as long
-    rgbReserved(0 To 31) as byte
-    'rgbReserved(32) as Byte 'this was declared incorrectly in VB API viewer
+    rgbReserved(0 to 31) as byte
+    'rgbReserved(32) as byte 'this was declared incorrectly in VB API viewer
 end type ' }
 
 
-Type SECURITY_ATTRIBUTES ' { Used for CreateProcess()
-    nLength              As Long
-    lpSecurityDescriptor As LongPtr
-    bInheritHandle       As Long
-End Type ' }
+type SECURITY_ATTRIBUTES ' { Used for CreateProcess()
+    nLength              as long
+    lpSecurityDescriptor as LongPtr
+    bInheritHandle       as long
+end type ' }
 
 type STARTUPINFO ' { Used for CreateProcess
-    cb              As Long
-    lpReserved      As String
-    lpDesktop       As String
-    lpTitle         As String
-    dwX             As Long
-    dwY             As Long
-    dwXSize         As Long
-    dwYSize         As Long
-    dwXCountChars   As Long
-    dwYCountChars   As Long
-    dwFillAttribute As Long
-    dwFlags         As Long
-    wShowWindow     As Integer
-    cbReserved2     As Integer
-    lpReserved2     As Byte
-    hStdInput       As LongPtr
-    hStdOutput      As LongPtr
-    hStdError       As LongPtr
+    cb              as long
+    lpReserved      as string
+    lpDesktop       as string
+    lpTitle         as string
+    dwX             as long
+    dwY             as long
+    dwXSize         as long
+    dwYSize         as long
+    dwXCountChars   as long
+    dwYCountChars   as long
+    dwFillAttribute as long
+    dwFlags         as long
+    wShowWindow     as integer
+    cbReserved2     as integer
+    lpReserved2     as byte
+    hStdInput       as LongPtr
+    hStdOutput      as LongPtr
+    hStdError       as LongPtr
 end type ' }
 
 
@@ -184,6 +282,10 @@ public const HWND_TOPMOST   = -1
 public const IDC_ARROW                = 32512&
 ' IDI_APPLICATION, See -> LoadIcon
 public const IDI_APPLICATION          = 32512&
+
+public const IMAGE_DIRECTORY_ENTRY_EXPORT = 0
+public const IMAGE_DIRECTORY_ENTRY_IMPORT = 1
+
 ' }
 ' { L
 
@@ -455,7 +557,7 @@ public const BLACK_BRUSH = 4
 #if VBA7 then ' 32-Bit versions of Excel ' {
 
 ' { A
-    declare function AttachThreadInput Lib "user32"                        ( _
+    declare function AttachThreadInput lib "user32"                        ( _
        byVal idAttach       as long, _
        byVal idAttachTo     as long, _
        byVal fAttach        as long) as long
@@ -491,9 +593,9 @@ public const BLACK_BRUSH = 4
 
     declare ptrSafe sub      RtlMoveMemory lib "kernel32"                  ( _
          byRef dest               as any    , _
-         ByRef source             as any    , _
+         byRef source             as any    , _
          byVal size               as longPtr)
-         
+
     declare ptrSafe function CreateProcess lib "kernel32" alias "CreateProcessA" ( _
          byVal lpApplicationName    as string             , _
          byVal lpCommandLine        as string             , _
@@ -649,7 +751,7 @@ public const BLACK_BRUSH = 4
 
     declare function GetCurrentThreadId  lib "kernel32" () as long
 
-    declare function GetCursorPos Lib "User32" (lpPoint As POINTAPI) as long
+    declare function GetCursorPos lib "User32" (lpPoint as POINTAPI) as long
 
     declare function GetDesktopWindow       lib "user32"   () as long
 
@@ -739,7 +841,7 @@ public const BLACK_BRUSH = 4
 
     declare function GetTempPath         lib "kernel32" alias "GetTempPathA"              ( _
          byVal nBufferLength  as long,  _
-         byVal lpBuffer       as String) as long
+         byVal lpBuffer       as string) as long
 
     declare function GetWindowRect       lib "user32.dll"                                 ( _
          byVal hwnd           as long, _
@@ -781,10 +883,21 @@ public const BLACK_BRUSH = 4
 ' { I
     declare function IsIconic            lib "user32"                                     ( _
          byVal hwnd           as long) as long
+
+    declare function ImageRvaToVa        lib "Imagehlp.dll"                               ( _
+         byVal NTHeaders      as long, _
+         byVal Base           as long, _
+         byVal RVA            as long, _
+         byVal LastRvaSection as long) as long
+
 ' }
 ' { L
 
-    declare function lstrcpy Lib "kernel32"                                               ( _
+
+    declare function lstrlen             lib "kernel32" alias "lstrlenA"                  ( _
+         byVal lpsz      as long) as long
+
+    declare function lstrcpy lib "kernel32"                                               ( _
          byVal lpString1 as any, _
          byVal lpString2 as any) as long
 
@@ -792,7 +905,7 @@ public const BLACK_BRUSH = 4
   '      See also constants IDC_ARROW etc
     declare ptrSafe function LoadCursor  lib "user32"       alias "LoadCursorA"           ( _
          byVal hInstance      as longPtr, _
-         byVal lpCursorName   as String ) as longPtr
+         byVal lpCursorName   as string ) as longPtr
   ' }
 
   ' LoadIcon {
@@ -810,6 +923,15 @@ public const BLACK_BRUSH = 4
 
 ' }
 ' { M
+
+  ' Map* {
+    declare function MapAndLoad          lib "Imagehlp.dll"                               ( _
+         byVal ImageName      as string,       _
+         byVal DLLPath        as string,       _
+               LoadedImage    as LOADED_IMAGE, _
+               DotDLL         as long,         _
+               ReadOnly       as long) as long
+
     declare function MapVirtualKey       lib "user32"       alias "MapVirtualKeyA"        ( _
          byVal wCode          as long,   _
          byVal wMapType       as long) as long
@@ -818,6 +940,8 @@ public const BLACK_BRUSH = 4
          byVal wCode          as long, _
          byVal wMapType       as long, _
          byVal dwhkl          as long) as long
+
+  ' Map }
 
     declare ptrSafe function MoveWindow  lib "user32"       alias "MoveWindow"            ( _
          byVal hwnd           as longPtr, _
@@ -925,13 +1049,13 @@ public const BLACK_BRUSH = 4
          byVal dwFlags           as long) as long
     ' }
 ' }
-    declare function ShellExecute Lib "shell32.dll"         alias "ShellExecuteA"     ( _
+    declare function ShellExecute lib "shell32.dll"         alias "ShellExecuteA"     ( _
          byVal hwnd         as long  , _
          byVal lpOperation  as string, _
          byVal lpFile       as string, _
          byVal lpParameters as string, _
          byVal lpDirectory  as string, _
-         byval lpShowCmd    as long)      as long
+         byVal lpShowCmd    as long)      as long
 
   ' ShowWindow {
   '
@@ -956,14 +1080,16 @@ public const BLACK_BRUSH = 4
          byRef hWinEventHook as long) as long
     ' }
 
-    declare         function UnhookWindowsHookEx  lib "user32" (ByVal hHook as long   ) as long
+    declare         function UnMapAndLoad         lib "Imagehlp.dll" (LoadedImage as LOADED_IMAGE) as long
 
-    declare ptrSafe Function UpdateWindow         lib "user32" (byVal hwnd  as longPtr) as long
+    declare         function UnhookWindowsHookEx  lib "user32" (byVal hHook as long   ) as long
+
+    declare ptrSafe function UpdateWindow         lib "user32" (byVal hwnd  as longPtr) as long
 
 ' }
 ' { V
 
-  ' VirtualAlloc
+  ' VirtualAlloc {
   ' - Use one of the MEM_* constants for flAllocationType
   ' - Use PAGE_* for flProtect
   ' - See also VirtualFree
