@@ -192,7 +192,7 @@ end type ' }
 
 type SECURITY_ATTRIBUTES ' { Used for CreateProcess()
     nLength              as long
-    lpSecurityDescriptor as LongPtr
+    lpSecurityDescriptor as longPtr
     bInheritHandle       as long
 end type ' }
 
@@ -212,9 +212,9 @@ type STARTUPINFO ' { Used for CreateProcess
     wShowWindow     as integer
     cbReserved2     as integer
     lpReserved2     as byte
-    hStdInput       as LongPtr
-    hStdOutput      as LongPtr
-    hStdError       as LongPtr
+    hStdInput       as longPtr
+    hStdOutput      as longPtr
+    hStdError       as longPtr
 end type ' }
 
 
@@ -230,6 +230,14 @@ public const CS_VREDRAW                     = &H1
 ' }
 
 public const CF_TEXT                        = 1
+
+' Process Creation Flags, used for CreateProcess {
+
+public const CREATE_NEW_CONSOLE      = &h00000010
+public const CREATE_SUSPENDED        = &h00000004
+public const DEBUG_ONLY_THIS_PROCESS = &h00000002
+
+' }
 
 ' Used in CreateWindowEx to indicate default position and dimension.
 public const CW_USEDEFAULT  = &H80000000
@@ -604,7 +612,7 @@ public const BLACK_BRUSH = 4
          byVal bInheritHandles      as long               , _
          byVal dwCreationFlags      as long               , _
                lpEnvironment        as any                , _
-         byVal lpCurrentDriectory   as string             , _
+         byVal lpCurrentDirectory   as string             , _
                lpStartupInfo        as STARTUPINFO        , _
                lpProcessInformation as PROCESS_INFORMATION) as longPtr
 

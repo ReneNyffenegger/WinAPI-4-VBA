@@ -5,7 +5,7 @@ sub main() ' {
     dim secAttrPrc as SECURITY_ATTRIBUTES : secAttrPrc.nLength = len(secAttrPrc)
     dim secAttrThr as SECURITY_ATTRIBUTES : secAttrThr.nLength = len(secAttrThr)
 
-    dim startInfo  as STARTUPINFO
+    dim startInfo  as STARTUPINFO ' : startInfo.cb = len(startInfo)
     dim procInfo   as PROCESS_INFORMATION
 
     if CreateProcess (                                         _
@@ -16,7 +16,7 @@ sub main() ' {
          bInheritHandles        :=   false                   , _
          dwCreationFlags        :=   0                       , _
          lpEnvironment          :=   0                       , _
-         lpCurrentDriectory     :=   environ("USERPROFILE")  , _
+         lpCurrentDirectory     :=   environ("USERPROFILE")  , _
          lpStartupInfo          :=   startInfo               , _
          lpProcessInformation   :=   procInfo )  then
 
