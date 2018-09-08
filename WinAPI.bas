@@ -189,7 +189,6 @@ type PAINTSTRUCT ' {
     'rgbReserved(32) as byte 'this was declared incorrectly in VB API viewer
 end type ' }
 
-
 type SECURITY_ATTRIBUTES ' { Used for CreateProcess()
     nLength              as long
     lpSecurityDescriptor as longPtr
@@ -216,8 +215,6 @@ type STARTUPINFO ' { Used for CreateProcess
     hStdOutput      as longPtr
     hStdError       as longPtr
 end type ' }
-
-
 
 ' }
 ' { Constants
@@ -599,22 +596,19 @@ public const BLACK_BRUSH = 4
     declare function CloseHandle         lib "kernel32"                    ( _
          byVal hObject            as long) as long
 
-    declare ptrSafe sub      RtlMoveMemory lib "kernel32"                  ( _
-         byRef dest               as any    , _
-         byRef source             as any    , _
-         byVal size               as longPtr)
-
+  ' CreateProcess {
     declare ptrSafe function CreateProcess lib "kernel32" alias "CreateProcessA" ( _
          byVal lpApplicationName    as string             , _
          byVal lpCommandLine        as string             , _
-               lpProcessAttributes  as SECURITY_ATTRIBUTES, _
-               lpThreadAttributes   as SECURITY_ATTRIBUTES, _
+         byRef lpProcessAttributes  as SECURITY_ATTRIBUTES, _
+         byRef lpThreadAttributes   as SECURITY_ATTRIBUTES, _
          byVal bInheritHandles      as long               , _
          byVal dwCreationFlags      as long               , _
-               lpEnvironment        as any                , _
+         byRef lpEnvironment        as any                , _
          byVal lpCurrentDirectory   as string             , _
                lpStartupInfo        as STARTUPINFO        , _
                lpProcessInformation as PROCESS_INFORMATION) as longPtr
+  ' }
 
   ' CreateThread {
     declare function CreateThread        lib "kernel32"                    ( _
@@ -996,6 +990,17 @@ public const BLACK_BRUSH = 4
     declare ptrSafe function RegisterClassEx lib "user32"   alias "RegisterClassExA"  ( _
                pcWndClassEx   as WNDCLASSEX ) as integer
     ' }
+
+    declare ptrSafe sub      RtlMoveMemory lib "kernel32"                  ( _
+         byRef dest               as any    , _
+         byRef source             as any    , _
+         byVal size               as longPtr)
+
+    declare ptrSafe sub      RtlZeroMemory lib "kernel32"                  ( _
+               dest               as any    , _
+         byVal length             as long   )
+
+
 ' }
 ' { S
     declare function SendInput           lib "user32"                                 ( _
