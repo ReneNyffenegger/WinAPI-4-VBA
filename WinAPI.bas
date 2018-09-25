@@ -824,7 +824,7 @@ public const BLACK_BRUSH = 4
 
     declare function GetProcAddress      lib "kernel32"                                   ( _
          byVal module         as long  , _
-         byVal ProcName       as string) as long
+         byVal procName       as string) as long
 
     ' { GetStockObject
     '   See also predefined brushes (such as WHITE_BRUSH, BLACK_BRUSH etc.)
@@ -950,6 +950,13 @@ public const BLACK_BRUSH = 4
          byVal dwhkl          as long) as long
 
   ' Map }
+  
+  
+    declare ptrSafe function MessageBox  lib "user32"       alias "MessageBoxW"           ( _
+         byVal hwnd           as longPtr, _
+         byVal lpText         as longPtr, _
+         byVal lpCaption      as longPtr, _
+         byVal wType          as long) as long
 
     declare ptrSafe function MoveWindow  lib "user32"       alias "MoveWindow"            ( _
          byVal hwnd           as longPtr, _
@@ -1116,6 +1123,13 @@ public const BLACK_BRUSH = 4
          byVal dwFreeType     as long   ) as long
 
    ' }
+   ' VirtualProtect {
+    declare function VirtualProtect lib "kernel32"                                   ( _
+               lpAddress      as long    , _
+         byVal dwSize         as long    , _
+         byVal flNewProtect   as long    , _
+               lpflOldProtect as long) as long
+  ' }
     declare function VkKeyScan           lib "user32"       alias "VkKeyScanA"        ( _
          byVal cChar      as byte) as integer
 
