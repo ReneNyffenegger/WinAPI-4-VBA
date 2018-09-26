@@ -820,6 +820,11 @@ public const BLACK_BRUSH = 4
          byVal module         as long  , _
          byVal procName       as string) as long
 
+  ' GetProcessHeap {
+  ' - See also HeapAlloc()
+    declare ptrSafe function GetProcessHeap lib "kernel32" () As longPtr
+  ' }
+
     ' { GetStockObject
     '   See also predefined brushes (such as WHITE_BRUSH, BLACK_BRUSH etc.)
     declare ptrSafe function GetStockObject lib "gdi32"                                   ( _
@@ -880,6 +885,21 @@ public const BLACK_BRUSH = 4
     declare function GlobalUnlock        lib "kernel32"                                  ( _
          byVal hMem           as long   ) as long
   ' }
+
+' }
+' { H
+
+  ' HeapAlloc {
+  '
+  ' hHeap: Use GetProcessHeap() or HeapCreate
+  '
+  ' - Compare with -> VirtualAlloc
+  '
+    declare ptrSafe function HeapAlloc lib "kernel32"                                     ( _
+         byVal hHeap          as longPtr, _
+         byVal dwFlags        as long   , _
+         byVal dwBytes        as longPtr) as longPtr
+   ' }
 
 ' }
 ' { I
@@ -1113,6 +1133,7 @@ public const BLACK_BRUSH = 4
   ' - Use one of the MEM_* constants for flAllocationType
   ' - Use PAGE_* for flProtect
   ' - See also VirtualFree
+  ' - Compare with HeapAlloc
     declare ptrSafe function VirtualAlloc lib "kernel32"                              ( _
          byVal address          as longPtr, _
          byVal size             as longPtr, _
