@@ -1,5 +1,21 @@
 option explicit
 
+enum HRESULT_values
+  ' NULL_          =          0
+    S_OK           =          0 ' Operation successful
+    S_FALSE        =          1
+    E_ABORT        = &h80004004 ' Operation aborted
+    E_ACCESSDENIED = &h80070005 ' General access denied error
+    E_FAIL         = &h80004005 ' Unspecified failure
+    E_HANDLE       = &h80070006 ' Invalid handle
+    E_INVALIDARG   = &h80070057 ' One or more arguments are not valid
+    E_NOINTERFACE  = &h80004002 ' No such interface supported
+    E_NOTIMPL      = &h80004001 ' Not implemented
+    E_OUTOFMEMORY  = &h8007000E ' Failed to allocate necessary memory
+    E_POINTER      = &h80004003 ' Invalid pointer
+    E_UNEXPECTED   = &h8000FFFF ' Unexpected failure
+end enum
+
 
 declare function CoTaskMemAlloc        lib "ole32"        ( _
         byVal cb        as long) as long
