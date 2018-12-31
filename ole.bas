@@ -16,6 +16,15 @@ enum HRESULT_values
     E_UNEXPECTED   = &h8000FFFF ' Unexpected failure
 end enum
 
+type GUID ' {
+  '
+  '  Declared in rpcdce.h / included by rpc.h
+  '
+     Data1          as long
+     Data2          as integer
+     Data3          as integer
+     Data4 (0 to 7) as byte
+end  type ' }
 
 declare function CoTaskMemAlloc        lib "ole32"        ( _
         byVal cb        as long) as long
@@ -40,5 +49,20 @@ declare function SysAllocStringByteLen lib "oleaut32"     ( _
         ByVal cblen     as long) as long
 
 declare function VariantCopy           lib "oleaut32"     ( _
+function CoCreateGuid_ as GUID ' {
+
+    if CoCreateGuid(CoCreateGuid_) <> 0 then
+       MsgBox "Something went wrong with CoCreateGuid"
+    end if
+
+end function ' }
+
+function StringFromGUID2_(rguid as GUID) as string ' {
+
+    StringFromGUID2_ = space$(38)
+
+    call StringFromGUID2 (rguid, strPtr(StringFromGUID2_), 38*2)
+
+end function ' }
         byVal pvargDest as long, _
         byRef pvargSrc  as variant) as long
