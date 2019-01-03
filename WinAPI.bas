@@ -1048,11 +1048,18 @@ public const BLACK_BRUSH = 4
          byVal wParam as long, _
                lParam as any) as long
 
+    ' SendMessageW {
+    '
+    '   The wide-character variant of SendMessage is needed if
+    '   a string needs to be passed with lParam. See for example
+    '      https://renenyffenegger.ch/notes/Windows/registry/environment-variables
+    '
     declare function SendMessageW        lib "user32"       alias "SendMessageW"      ( _
          byVal hwnd   as long, _
          byVal wMsg   as long, _
          byVal wParam as long, _
                lParam as any) as long
+    ' }
 
     declare function SendMessageTimeoutW lib "user32"       alias "SendMessageTimeoutW" ( _
          byVal hwnd     as long, _
