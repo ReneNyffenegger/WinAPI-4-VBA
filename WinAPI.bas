@@ -276,6 +276,7 @@ public const HSHELL_WINDOWCREATED    = 1  ' Top-level unowned window has been cr
 '   These can be used for the parameter hWndInsertAfter in SetWindowPos()
 '
 public const HWND_BOTTOM    =  1
+public const HWND_BROADCAST = &HFFFF&
 public const HWND_NOTOPMOST = -2
 public const HWND_TOP       =  0
 public const HWND_TOPMOST   = -1
@@ -325,6 +326,11 @@ public const SM_CXSCREEN        =  0 ' Width of primary monitor
 public const SM_CYSCREEN        =  1 ' Height of primary monitor
 public const SM_SLOWMACHINE     = 73 ' Non zero if slow (low-end) processor
 ' }
+
+public const SMTO_ABORTIFHUNG        = &H2&
+
+public const SPI_SETNONCLIENTMETRICS = &H2A&
+
 ' SW_* constants for ShowWindow() {
 public const SW_FORCEMINIMIZE   = 11 ' Minimizes a window.
 public const SW_HIDE            =  0 ' Hides the window and activates another window.
@@ -500,17 +506,18 @@ public const WH_KEYBOARD_LL = 13 ' Low level keyboard events
 public const WH_SHELL       = 10 ' Notification of shell events, such as creation of top level windows.
 ' }
 ' { WM_*: Window messsages
-public const WM_CHAR        = &h0102
-public const WM_CLOSE       = &H0010
-public const Wm_CREATE      = &H0001
-public const WM_DESTROY     = &H0002
-public const WM_KEYDOWN     = &h0100
-public const WM_KEYUP       = &h0101
-public const WM_PAINT       = &H000F
-public const WM_SETTEXT     = &h000C
-public const WM_SIZE        = &h0005
-public const WM_SYSKEYDOWN  = &h0104
-public const WM_SYSKEYUP    = &h0105
+public const WM_CHAR          = &h0102
+public const WM_CLOSE         = &H0010
+public const Wm_CREATE        = &H0001
+public const WM_DESTROY       = &H0002
+public const WM_KEYDOWN       = &h0100
+public const WM_KEYUP         = &h0101
+public const WM_PAINT         = &H000F
+public const WM_SETTEXT       = &h000C
+public const WM_SETTINGCHANGE = &H001A
+public const WM_SIZE          = &h0005
+public const WM_SYSKEYDOWN    = &h0104
+public const WM_SYSKEYUP      = &h0105
 ' }
 
 ' { WS_* / Window styles
@@ -1040,6 +1047,21 @@ public const BLACK_BRUSH = 4
          byVal wMsg   as long, _
          byVal wParam as long, _
                lParam as any) as long
+
+    declare function SendMessageW        lib "user32"       alias "SendMessageW"      ( _
+         byVal hwnd   as long, _
+         byVal wMsg   as long, _
+         byVal wParam as long, _
+               lParam as any) as long
+
+    declare function SendMessageTimeoutW lib "user32"       alias "SendMessageTimeoutW" ( _
+         byVal hwnd     as long, _
+         ByVal msg      as long, _
+         byVal wParam   as long, _
+         byVal lParam   as long, _
+         byVal fuFlags  as long, _
+         byVal uTimeout as long, _
+         lpdwResult     as long) as long
 
     declare function SetClipboardData    lib "User32"                                 ( _
          byVal wFormat as long, _
