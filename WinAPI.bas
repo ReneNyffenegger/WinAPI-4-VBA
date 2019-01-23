@@ -35,6 +35,10 @@ type IMAGE_EXPORT_DIRECTORY_TABLE ' {
 end type ' }
 
 type IMAGE_OPTIONAL_HEADER ' {
+'
+'  This type should probably be more accuratly be called
+'  IMAGE_OPTIONAL_HEADER32 or IMAGE_OPTIONAL_HEADER
+'
  ' Standard fields.
    Magic                                                 as  integer
    MajorLinkerVersion                                    as  byte
@@ -72,6 +76,9 @@ type IMAGE_OPTIONAL_HEADER ' {
 end type ' }
 
 type IMAGE_COFF_HEADER ' { COFF file header
+'
+'  TODO: This type should be called IMAGE_FILE_HEADER
+'
    Machine               as  integer
    NumberOfSections      as  integer
    TimeDateStamp         as  long
@@ -83,11 +90,11 @@ end type ' }
 
 type IMAGE_PE_FILE_HEADER ' {
   '
-  ' Same structure as IMAGE_NT_HEADER?
+  ' Same structure as IMAGE_NT_HEADERS32 or IMAGE_NT_HEADERS64, defined in WinNT.h
   '
     Signature      as long
-    FileHeader     as IMAGE_COFF_HEADER
-    OptionalHeader as IMAGE_OPTIONAL_HEADER
+    FileHeader     as IMAGE_COFF_HEADER     ' This type should probably be named IMAGE_FILE_HEADER rather than IMAGE_COFF_HEADER.
+    OptionalHeader as IMAGE_OPTIONAL_HEADER ' This type should be IMAGE_OPTIONAL_HEADER32 or IMAGE_OPTIONAL_HEADER64
 end type ' }
 
 type WNDCLASSEX ' {
@@ -148,19 +155,32 @@ type LIST_ENTRY ' { Used by LOADED_IMAGE
   Blink as long
 end type ' }
 
-type LOADED_IMAGE ' 48 bytes (46 bytes packed) ' { Used with MapAndLoad
-  ModuleName       as long
-  hFile            as long
-  MappedAddress    as long ' Base address of mapped file
-  pFileHeader      as long ' Pointer to IMAGE_PE_FILE_HEADER
-  pLstRvaSection   as long ' Pointer to first COFF section header (section table)??
-  NumberOfSections as long
-  pSections        as long ' Pointer to first COFF section header (section table)??
-  Characteristics  as long ' Image characteristics value
-  fSystemImage     as Byte
-  fDOSImage        as Byte
-  Links            as LIST_ENTRY ' 2 longs
-  SizeOfImage      as long
+'
+'    LOADED_IMAGE
+'      Is defined in both ImageHlp.h and DbgHelp.h
+'
+type LOADED_IMAGE ' 48 bytes (46 bytes packed ) ' { Used with MapAndLoad
+  ModuleName         as long
+  hFile              as long
+  MappedAddress      as long ' Base address of mapped file
+  pFileHeader        as long ' Pointer to IMAGE_PE_FILE_HEADER (or IMAGE_NT_HEADERS32 / IMAGE_NT_HEADERS64 ?)
+  pLstRvaSection     as long ' Pointer to first COFF section header (section table)? Should probably be named LastRvaSection (or at least pLastRvaSection)
+  NumberOfSections   as long
+  pSections          as long ' Pointer to first COFF section header (section table)??
+  Characteristics    as long ' Image characteristics value
+  fSystemImage       as byte
+  fDOSImage          as byte
+'
+' At least in C, the compiler pads the following two (new) members
+' with the previous two bytes into 4 byte so that in C, adding
+' or omitting them should not change anything.
+'
+' fReadOnly          as byte ' Boolean
+' Version            as byte ' UCHAR
+'
+' ----------------------------------------------------------
+  Links              as LIST_ENTRY ' 2 longs
+  SizeOfImage        as long
 end type ' }
 
 public type MODULEINFO ' {
