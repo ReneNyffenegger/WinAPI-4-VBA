@@ -13,7 +13,7 @@ type INPUT_     '   typedef struct tagINPUT ' {
 end type ' }
 
 
-private type IMAGE_DATA_DIRECTORY ' {
+private type IMAGE_DATA_DIRECTORY ' WinNT.h {
     RVA  as long ' Relative VA
     Size as long
 end type ' }
@@ -34,12 +34,11 @@ type IMAGE_EXPORT_DIRECTORY_TABLE ' {
   pAddressOfNameOrdinals  as  long
 end type ' }
 
-type IMAGE_OPTIONAL_HEADER ' {
+type IMAGE_OPTIONAL_HEADER32 ' WinNT.h {
 '
-'  This type should probably be more accuratly be called
-'  IMAGE_OPTIONAL_HEADER32 or IMAGE_OPTIONAL_HEADER
+'  2019-01-24: Renamed from IMAGE_OPTIONAL_HEADER
 '
- ' Standard fields.
+ ' Standard fields:
    Magic                                                 as  integer
    MajorLinkerVersion                                    as  byte
    MinorLinkerVersion                                    as  byte
@@ -49,7 +48,8 @@ type IMAGE_OPTIONAL_HEADER ' {
    AddressOfEntryPoint                                   as  long
    BaseOfCode                                            as  long
    BaseOfData                                            as  long
- ' NT additional fields.
+
+ ' NT additional fields:
    ImageBase                                             as  long
    SectionAlignment                                      as  long
    FileAlignment                                         as  long
@@ -75,9 +75,9 @@ type IMAGE_OPTIONAL_HEADER ' {
    DataDirectory(0 to IMAGE_NUMBEROF_DIRECTORY_ENTRIES)  as  IMAGE_DATA_DIRECTORY ' 17*8 + 96 = 232
 end type ' }
 
-type IMAGE_COFF_HEADER ' { COFF file header
+type IMAGE_FILE_HEADER ' { WinNT.h / COFF file header
 '
-'  TODO: This type should be called IMAGE_FILE_HEADER
+'  2019-01-24: Renamed from IMAGE_COFF_HEADER
 '
    Machine               as  integer
    NumberOfSections      as  integer
@@ -88,13 +88,15 @@ type IMAGE_COFF_HEADER ' { COFF file header
    Characteristics       as  integer
 end type ' }
 
-type IMAGE_PE_FILE_HEADER ' {
+type IMAGE_NT_HEADERS32 ' WinNT.h {
   '
-  ' Same structure as IMAGE_NT_HEADERS32 or IMAGE_NT_HEADERS64, defined in WinNT.h
+  ' 2019-01-24: renamed from  »IMAGE_PE_FILE_HEADER«.
+  '
+  ' Compare with IMAGE_NT_HEADERS64, also defined in WinNT.h
   '
     Signature      as long
-    FileHeader     as IMAGE_COFF_HEADER     ' This type should probably be named IMAGE_FILE_HEADER rather than IMAGE_COFF_HEADER.
-    OptionalHeader as IMAGE_OPTIONAL_HEADER ' This type should be IMAGE_OPTIONAL_HEADER32 or IMAGE_OPTIONAL_HEADER64
+    FileHeader     as IMAGE_FILE_HEADER
+    OptionalHeader as IMAGE_OPTIONAL_HEADER32 '  or IMAGE_OPTIONAL_HEADER64
 end type ' }
 
 type WNDCLASSEX ' {
@@ -163,19 +165,19 @@ type LOADED_IMAGE ' 48 bytes (46 bytes packed ) ' { Used with MapAndLoad
   ModuleName         as long
   hFile              as long
   MappedAddress      as long ' Base address of mapped file
-  pFileHeader        as long ' Pointer to IMAGE_PE_FILE_HEADER (or IMAGE_NT_HEADERS32 / IMAGE_NT_HEADERS64 ?)
-  pLstRvaSection     as long ' Pointer to first COFF section header (section table)? Should probably be named LastRvaSection (or at least pLastRvaSection)
+  FileHeader         as long ' Pointer to IMAGE_NT_HEADERS32 ' IMAGE_PE_FILE_HEADER (Compare with IMAGE_NT_HEADERS64)
+  LastRvaSection     as long ' Pointer to first COFF section header (section table)? 2019-01-24: Renamed from pLstRvaSection 
   NumberOfSections   as long
-  pSections          as long ' Pointer to first COFF section header (section table)??
+  Sections           as long ' Pointer to IMAGE_SECTION_HEADER (First COFF section header (section table)??)
   Characteristics    as long ' Image characteristics value
-  fSystemImage       as byte
-  fDOSImage          as byte
+  fSystemImage       as byte ' bool
+  fDOSImage          as byte ' bool
 '
 ' At least in C, the compiler pads the following two (new) members
 ' with the previous two bytes into 4 byte so that in C, adding
 ' or omitting them should not change anything.
 '
-' fReadOnly          as byte ' Boolean
+' fReadOnly          as byte ' bool
 ' Version            as byte ' UCHAR
 '
 ' ----------------------------------------------------------
