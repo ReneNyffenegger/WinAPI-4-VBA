@@ -20,7 +20,7 @@ end type ' }
 
 private const IMAGE_NUMBEROF_DIRECTORY_ENTRIES = 16
 
-type IMAGE_EXPORT_DIRECTORY_TABLE ' {
+type IMAGE_EXPORT_DIRECTORY_TABLE ' WinNT.h {
   Characteristics         as  long
   TimeDateStamp           as  long
   MajorVersion            as  integer
@@ -29,9 +29,9 @@ type IMAGE_EXPORT_DIRECTORY_TABLE ' {
   Base                    as  long
   NumberOfFunctions       as  long
   NumberOfNames           as  long
-  pAddressOfFunctions     as  long
-  pAddressOfNames         as  long
-  pAddressOfNameOrdinals  as  long
+  AddressOfFunctions      as  long ' Relative virtual address (RVA) from base of image. Points to an array of RVAs of functions/symbols in the module
+  AddressOfNames          as  long ' Relative virtual address (RVA) from base of image
+  AddressOfNameOrdinals   as  long ' Relative virtual address (RVA) from base of image
 end type ' }
 
 type IMAGE_OPTIONAL_HEADER32 ' WinNT.h {
@@ -165,7 +165,7 @@ type LOADED_IMAGE ' 48 bytes (46 bytes packed ) ' { Used with MapAndLoad
   ModuleName         as long
   hFile              as long
   MappedAddress      as long ' Base address of mapped file
-  FileHeader         as long ' Pointer to IMAGE_NT_HEADERS32 ' IMAGE_PE_FILE_HEADER (Compare with IMAGE_NT_HEADERS64)
+  FileHeader         as long ' Pointer to IMAGE_NT_HEADERS32 ' (Compare with IMAGE_NT_HEADERS64) -- Note: the pointed to IMAGE_NT_HEADERS32 also has a member named FileHeader.
   LastRvaSection     as long ' Pointer to first COFF section header (section table)? 2019-01-24: Renamed from pLstRvaSection 
   NumberOfSections   as long
   Sections           as long ' Pointer to IMAGE_SECTION_HEADER (First COFF section header (section table)??)
