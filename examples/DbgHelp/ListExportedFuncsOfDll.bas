@@ -7,70 +7,86 @@ option explicit
 ' Hmmm… why is this necessary?
 '
 private declare sub MoveMemoryLong lib "kernel32" alias "RtlMoveMemory" ( _
-        Target   as Any , _
+        Target   as any , _
   byVal LPointer as long, _
   byVal cbCopy   as long)
 
 
-sub main() 
-  dim IM       as LOADED_IMAGE
-  dim peHeader as IMAGE_PE_FILE_HEADER
+sub listExportedFuncs() ' {
+  dim img      as LOADED_IMAGE
+  dim peHeader as IMAGE_NT_HEADERS32 '  Was IMAGE_PE_FILE_HEADER
   dim expTable as IMAGE_EXPORT_DIRECTORY_TABLE
 
-  dim dllPath as string: dllPath = "C:\Windows\System32\msvbvm60.dll"
+  dim dllPath as string
+      dllPath = "C:\Windows\System32\msvbvm60.dll"
+'     dllPath = "C:\Program Files (x86)\Common Files\microsoft shared\VBA\VBA7.1\VBE7.DLL"
 
-  if MapAndLoad(dllPath, dllPath, IM, true, true) = 0 then
+  if MapAndLoad(dllPath, dllPath, img, true, true) = 0 then
      debug.print "Could nod map " & dllPath 
      exit sub
   end if
 
   on error goto err_
 
-' Copy pe file header:
-  RtlMoveMemory byVal varPtr(peHeader), byVal IM.pFileHeader, 256
+  dim fOut as integer: fOut = freeFile
+  open environ$("TEMP") & "\exportedFuncs.txt" for output as #fOut
+
+' Copy PE file header:
+  RtlMoveMemory byVal varPtr(peHeader), byVal img.FileHeader, lenb(peHeader)
 
 ' Get export table offset as relative virtual address (RVAs)
   dim expRVA as long
   expRVA = peHeader.OptionalHeader.DataDirectory(IMAGE_DIRECTORY_ENTRY_EXPORT).RVA
 
   if expRVA = 0 then
-     call UnMapAndLoad(IM)
-     
+     call UnMapAndLoad(img)
   end if
 
 ' Convert RVA to VA:
   dim expVA as long
-  expVA = ImageRvaToVa(IM.pFileHeader, IM.MappedAddress, expRVA, 0&)
+  expVA = ImageRvaToVa(img.FileHeader, img.MappedAddress, expRVA, 0&)
 
-  RtlMoveMemory byVal varPtr(expTable), byVal expVA, LenB(expTable)
+  RtlMoveMemory byVal varPtr(expTable), byVal expVA, lenB(expTable)
 
   dim nofExports as long
   nofExports = expTable.NumberOfNames
 
-  dim ptrExportedFuncs as long ' , NamePt as long
-  ptrExportedFuncs = ImageRvaToVa(IM.pFileHeader, IM.MappedAddress, expTable.pAddressOfNames, 0&)
+  dim ptrToArrayOfExportedFuncNames     as long
+  dim ptrToArrayOfExportedFuncAddresses as long
 
-  dim ptrName as long
-  ptrName = ptrExportedFuncs ' first pointer in array
-
-  dim ptrNameCopy as long
-  MoveMemoryLong ptrNameCopy, ptrName, 4
+  ptrToArrayOfExportedFuncNames     = ImageRvaToVa(img.FileHeader, img.MappedAddress, expTable.AddressOfNames    , 0&)
+  ptrToArrayOfExportedFuncAddresses = ImageRvaToVa(img.FileHeader, img.MappedAddress, expTable.AddressOfFunctions, 0&)
 
   dim i as long
   for i = 0 to nofExports - 1
-      ptrNameCopy = ImageRvaToVa(IM.pFileHeader, IM.MappedAddress, ptrNameCopy, 0&)
-      debug.print LPSTRtoBSTR(ptrNameCopy)
-      ptrName = (ptrName + 4)
-      MoveMemoryLong ptrNameCopy, ptrName, 4
+
+      dim RVAfuncName    as long
+      dim RVAfuncAddress as long
+
+      MoveMemoryLong RVAfuncName   , ptrToArrayOfExportedFuncNames    , 4
+      MoveMemoryLong RVAfuncAddress, ptrToArrayOfExportedFuncAddresses, 4
+
+      dim VAfuncName    as long
+      dim VAfuncAddress as long
+
+      VAfuncName     = ImageRvaToVa(img.FileHeader, img.MappedAddress, RVAfuncName   , 0&)
+      VAfuncAddress  = ImageRvaToVa(img.FileHeader, img.MappedAddress, RVAfuncAddress, 0&)
+
+      print# fOut, VAfuncAddress & ": " & LPSTRtoBSTR(VAfuncName)
+ 
+      ptrToArrayOfExportedFuncNames     = ptrToArrayOfExportedFuncNames     + 4
+      ptrToArrayOfExportedFuncAddresses = ptrToArrayOfExportedFuncAddresses + 4
   next i
 
-  call UnMapAndLoad(IM)
+  call UnMapAndLoad(img)
+
+  close# fOut
   exit sub
 
 err_:
-  call UnMapAndLoad(IM)
-  debug.print "Error occured"
-end sub
+  call UnMapAndLoad(img)
+  debug.print "Error occured: " & err.description
+end sub ' listExportedFuncs }
 
 private function LPSTRtoBSTR(byVal lpString as long) as string ' {
    dim lenS as long
