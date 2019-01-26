@@ -22,7 +22,7 @@ sub listExportedFuncs() ' {
 '     dllPath = "C:\Program Files (x86)\Common Files\microsoft shared\VBA\VBA7.1\VBE7.DLL"
 
   if MapAndLoad(dllPath, dllPath, img, true, true) = 0 then
-     debug.print "Could nod map " & dllPath 
+     debug.print "Could not map " & dllPath 
      exit sub
   end if
 
