@@ -524,7 +524,7 @@ public const VK_NONAME               = &h0fc ' }
 '  WH_* constants used for SetWindowsHookEx {
 '
 public const WH_CBT         =  5
-public const WH_KEYBOARD_LL = 13 ' Low level keyboard events
+public const WH_KEYBOARD_LL = 13 ' Low level keyboard events (compare with WH_KEYBOARD)
 public const WH_SHELL       = 10 ' Notification of shell events, such as creation of top level windows.
 ' }
 ' { WM_*: Window messsages
